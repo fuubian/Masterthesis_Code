@@ -1,4 +1,8 @@
 .ipynb_checkpoints/
+
 source_files/
+pdf_files/
+extracted_images/
+extracted_tables/
+
 TexSoup/
-/dataset/tables.csv
