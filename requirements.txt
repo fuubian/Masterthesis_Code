@@ -1,2 +1,4 @@
 lxml
 TexSoup
+pdf2image
+pdflatex
