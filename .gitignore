@@ -8,3 +8,5 @@ extracted_tables/
 extracted_figures/
 
 TexSoup/
+
+dataset/zipping_papers.ipynb
