@@ -1,6 +1,8 @@
 .ipynb_checkpoints/
 .idea/
 
+*.pth
+
 source_files/
 pdf_files/
 extracted_images/
