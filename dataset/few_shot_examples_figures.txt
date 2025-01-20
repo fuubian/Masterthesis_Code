@@ -1,0 +1,23 @@
+2209.01769_FIG_4
+Caption: \textcolor{black}{Rate-distortion comparison of GOP sizes 4, 8, 16 on UVG dataset under intra-period 32.} 
+Text mentions: We evaluate the effect of GOP size on the performance of B-CANF. A number of GOP sizes, including 4, 8, 16, are tested with intra-period 32. The BD-rates are summarized in Table~\ref{tab:abl_gop} (see the results w/o a separate P-frame codec). The corresponding rate-distortion curves on UVG dataset are presented in Fig.~\ref{fig:abl_gop_size}. From Fig.~\ref{fig:abl_gop_size}, the rate-distortion performance of B-CANF is seen to improve with the increased GOP size. The improvement is most obvious at low rates. Like P-frames, our B*-frames suffer more from temporal error propagation with smaller GOP sizes (in which cases, B*-frames are sent more frequently), especially at low rates where poor reconstruction and motion quality is expected. Increasing GOP size decreases the frequency of B*-frames, thereby reducing temporal error propagation.
+Question: How does increasing the GOP size affect the rate-distortion performance of B-CANF on the UVG dataset under intra-period 32?
+Answer: Increasing GOP size improves rate-distortion performance.
+
+2203.08550_FIG_7
+Caption: The finger contribution comparison of the bending angle for human and robot hands. (a) Single-direction grasp, (b) Bidirectional grasp.
+Text Mentions: Based on the collected data of the fingers of the soft robot and human hands, the proportion of the bending angle were calculated to analyze the contribution of each fingers. As shown in Figure \ref{IROSFigBiomimeticRatioComparsion}, for the single-direction grasp, the thumb, index and middle fingers act as the main roles for the grasp pose. Beside, the relative high weight of the human ring finger is caused by the [missing part]
+Question: Which fingers contribute the most to the bending angle in a single-direction grasp for both human and robot hands?
+Answer: Thumb, index, and middle fingers.
+
+2206.07171_FIG_2
+Caption: Categorization of the 38 papers reviewed in this survey. The papers are first categorized on the learning paradigm (fully vs. semi/un/self-supervised) and on the segmentation type (semantic vs. instance). Each quadrant shows the distributions of applications (2D vs. 3D) and DL backbones (U-Net vs. FCN vs. Other) of the papers that use the corresponding learning and segmentation approaches. 
+Text mentions: Fig.~\ref{fig:SearchResultSummary} summarizes this collection of 38 papers in terms of learning technique (fully supervised or not), segmentation type (semantic or instance), application (2D or 3D) and the underlying modeling backbone. Before reviewing these papers, we discuss the key EM datasets and describe the evolution of DL architectures, which are two crucial components that have been permitting the progress of EM segmentation analysis.
+Question: How are the 38 papers reviewed in the survey categorized?
+Answer: The papers are categorized by learning paradigm (fully vs. semi/un/self-supervised) and segmentation type (semantic vs. instance).
+
+2201.06313_FIG_4
+Caption: The general architecture of the proposed method 
+Text mentions: In designing the model for the proposed method, the SoftMax function must be used in the output layer of the model because each category has three different classes of positive, negative, and neutral. Since our number of categories is 9, 9 SoftMax functions with three neurons were used. Fig. \ref{fig:4} shows the general architecture of the proposed method based on hard parameter sharing to solve the two sub-tasks of aspect category detection and aspect category polarity for joint learning.
+Question: How is the output layer of the general architecture of the proposed method designed?
+Answer: The output layer uses 9 SoftMax functions with three neurons each for the categories: positive, negative, and neutral.
