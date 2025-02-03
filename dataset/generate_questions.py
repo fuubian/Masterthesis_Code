@@ -1,7 +1,9 @@
 from transformers import AutoModelForCausalLM, AutoTokenizer
+import torch
 import csv
 import os
 import sys
+import regex as re
 
 # Variables and directories
 workspace_dir = "/pfs/work7/workspace/scratch/ma_frajwa-dataset/"
@@ -38,7 +40,7 @@ The answer should be unambigious and consist of as few words as possible.
 
 Caption: Experimental results on the ISIDCM-20 dataset. ``Mean" denotes the average CT value in the selected ROIs. ``AR" denotes the absolute error between the average CT value of each method and that of referenced NDCT in the selected ROIs. The best and second-best performance in each column is colorized by the \textcolor{red}{red} and the  \textcolor{blue}{blue}.
 Text mentions: \subsubsection{Performance comparison on clinical dataset} We follow \cite{10081080} to choose the two most representative ROIs for performance comparison on clinical datasets, as shown in Figures \ref{real1} and \ref{real2}. We calculate the average CT Hounsfield units value and corresponding absolute error with reference images (unpaired NDCT images) as used in \cite{10081080}.  As illustrated in Table \ref{isicdm-20}, quantitative results demonstrate that our proposed method has a closer CT value with the reference image. For example, in ROI-2, the average CT value of our proposed method is -25.15, instead, the second-best result achieved by CCDnet is only -13.91. By observing visualized results in Figure \ref{real1}, it seems that most baseline methods (especially for Noiser2noise and CycleGAN) achieve an unfavorable noise suppression for this very challenging LDCT image with complex and serious noise.
-Question: What is the second-best average CT value in ROI-2?\
+Question: What is the second-best average CT value in ROI-2?
 Answer: -13.91.
 
 Caption: \label{tab:pkg-times} Comparison of different \proglang{Python} packages for Bayesian optimization. The elapsed time per iteration averaged across the ten runs is given for each package.
@@ -60,7 +62,6 @@ Caption: Experiment 2 Results: Summary of the median, mean, and standard deviati
 Text Mentions: The principal findings of the second experiment are presented in Table~\ref{tab:Iterations}, providing a comprehensive comparison of the epochs required to achieve the predefined loss value of $0.05$, as outlined in Section~\ref{setup2}, between the SCQRNN model and the CQRNN baseline model.
 Question: Which predefined loss value is used as the threshold for comparing the epochs required for convergence between the SCQRNN and CQRNN models?
 Answer: 0.05.
-
 """
 
 few_shot_learning_figure = """
@@ -165,13 +166,17 @@ def get_object_data(meta_file, start_index, end_index, table=False):
 def get_table_code(code_file):
     table_code = None
     if os.path.isfile(code_file):
-        with open(code_file, "r", encoding='utf-8') as code_file:
-            table_code = code_file.read()
+        with open(code_file, "r", encoding='utf-8') as file:
+            table_code = file.read()
             splitted_code = table_code.split("\pagenumbering{gobble}")
-            if len(splitted_code) != 2:
-                raise ValueError(f"Unexpected occurrence of pagenumbering. Please check manually {code_file}")
-            table_code = splitted_code[-1]
-            table_code = table_code.replace("\end{document}", "")
+            if len(splitted_code) == 2:
+                table_code = splitted_code[-1]
+                table_code = table_code.replace("\end{document}", "")
+            else:
+                found_tables = re.findall(r"\\begin\{table\*?\}.*?\\end\{table\*?\}", table_code, re.DOTALL)
+                if len(found_tables) != 1:
+                    raise ValueError(f"Unexpected occurrence of pagenumbering. Please check manually {code_file}")
+                table_code = found_tables[0]
     else:
         raise FileNotFoundError(f"{code_file} was not found.")
     return table_code
@@ -209,7 +214,7 @@ def execute_generation(start_index, end_index, table=False):
             image_file = table_image_dir + obj + ".png"
             table_code = object_data[obj][2]
         else:
-            image_file = figure_image_dir + obj + ".png"
+            image_file = figure_dir + obj + ".png"
             
         # Generation
         try:    
@@ -222,24 +227,16 @@ def execute_generation(start_index, end_index, table=False):
                 output.write(response)
 
         counter += 1
-        if counter % int(len(object_data)/10) == 0:
-            print(f"{counter} objects have been processed.")
+        if counter % 10 == 0:
+            print(f"{counter + start_index} objects have been processed.")
 
     print("Process complete.")
 
 # Main function
 def main(s_index, e_index, is_table):
-    model_id = "Qwen/Qwen2.5-14B-Instruct"
-    model = AutoModelForCausalLM.from_pretrained(
-        model_id,
-        torch_dtype="auto",
-        device_map="auto"
-    )
-    tokenizer = AutoTokenizer.from_pretrained(model_id, trust_remote_code=True)
-    
     execute_generation(s_index, e_index, is_table)
-   
-# Running main function   
+ 
+# Running main function
 if __name__ == '__main__':
     args = sys.argv[1:]
     if len(args) != 3:
