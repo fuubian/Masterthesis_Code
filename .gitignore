@@ -2,6 +2,7 @@
 .idea/
 
 *.pth
+*.csv
 
 source_files/
 pdf_files/

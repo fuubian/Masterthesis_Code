@@ -4,10 +4,11 @@ import csv
 import os
 import sys
 import regex as re
+import random
 
 # Variables and directories
 workspace_dir = "/pfs/work7/workspace/scratch/ma_frajwa-dataset/"
-qa_output_dir = workspace_dir + "qa_output/"
+qa_output_dir = workspace_dir + "qa_output2/"
 
 table_dir = workspace_dir + "extracted_tables/"
 table_image_dir = table_dir + "table_images/"
@@ -21,7 +22,6 @@ os.makedirs(qa_output_dir, exist_ok=True)
 
 # Define QA-Pair-Generation Prompts
 table_prompt = """
-Table: {table_code} 
 Caption: {caption} 
 Text mentions: {text_mentions} 
 Question: [Your generated question here] 
@@ -106,7 +106,7 @@ def generate_qa_pair(object_id, image_file, caption, text_mentions, table_code, 
     instruction_prompt = None
     if table_code:
         instruction_prompt = few_shot_learning_table
-        task_input_prompt = table_prompt.replace("{caption}", caption).replace("{text_mentions}", text_mentions).replace("{table_code}", table_code)
+        task_input_prompt = table_prompt.replace("{caption}", caption).replace("{text_mentions}", text_mentions)
     else:
         instruction_prompt = few_shot_learning_figure
         task_input_prompt = figure_prompt.replace("{caption}", caption).replace("{text_mentions}", text_mentions)
@@ -136,53 +136,31 @@ def generate_qa_pair(object_id, image_file, caption, text_mentions, table_code, 
     return response
     
 # Read either figure or table data from csv file
-def get_object_data(meta_file, start_index, end_index, table=False):
+def get_object_data(meta_file, table=False):
     object_data = {}
+    file_collection = set(os.listdir(qa_output_dir))
     with open(meta_file, "r", newline='', encoding='utf-8') as csv_file:
         spamreader = csv.reader(csv_file, delimiter=';', quotechar='|', quoting=csv.QUOTE_MINIMAL)
 
-        index = 0
         for row in spamreader:
-            if index >= start_index:
+            if row[0]+".txt" not in file_collection:
                 object_id = row[0]
                 caption = row[3]
                 text_mentions = row[4]
 
                 if table: # For tables
                     try:
-                        table_code = get_table_code(table_code_dir + object_id + ".tex")
+                        table_code = "Table"
                         object_data[object_id] = (caption, text_mentions, table_code)
                     except Exception as e:
-                        print(f"Error occurred for index {index}: {e}")
+                        print(f"Error occurred for object {object_id}: {e}")
                 else: # For figures
                     object_data[object_id] = (caption, text_mentions)
-            index += 1
-            if index > end_index:
-                break
 
     return object_data
 
-# Return table code
-def get_table_code(code_file):
-    table_code = None
-    if os.path.isfile(code_file):
-        with open(code_file, "r", encoding='utf-8') as file:
-            table_code = file.read()
-            splitted_code = table_code.split("\pagenumbering{gobble}")
-            if len(splitted_code) == 2:
-                table_code = splitted_code[-1]
-                table_code = table_code.replace("\end{document}", "")
-            else:
-                found_tables = re.findall(r"\\begin\{table\*?\}.*?\\end\{table\*?\}", table_code, re.DOTALL)
-                if len(found_tables) != 1:
-                    raise ValueError(f"Unexpected occurrence of pagenumbering. Please check manually {code_file}")
-                table_code = found_tables[0]
-    else:
-        raise FileNotFoundError(f"{code_file} was not found.")
-    return table_code
-
 # Execute whole QA generation for either figures or tables, following a range of indexes in the metadata file
-def execute_generation(start_index, end_index, table=False):
+def execute_generation(table=False):
     # Loading model
     model_id = "Qwen/Qwen2.5-14B-Instruct"
     model = AutoModelForCausalLM.from_pretrained(
@@ -196,16 +174,16 @@ def execute_generation(start_index, end_index, table=False):
     object_data = None
     try:
         if table:
-            object_data = get_object_data(table_metadata, start_index, end_index, True)
+            object_data = get_object_data(table_metadata, True)
         else:
-            object_data = get_object_data(figure_metadata, start_index, end_index)
+            object_data = get_object_data(figure_metadata)
     except Exception as e:
         print("Error during data extraction:", e)
         return None
 
     print("QA-pair generation started.")
     counter = 0
-    for obj in object_data:
+    for obj in random.sample(list(object_data.keys()), len(object_data)):
         image_file = None
         table_code = None
         caption = object_data[obj][0]
@@ -228,26 +206,24 @@ def execute_generation(start_index, end_index, table=False):
 
         counter += 1
         if counter % 10 == 0:
-            print(f"{counter + start_index} objects have been processed.")
+            print(f"{counter} objects have been processed.")
 
     print("Process complete.")
 
 # Main function
-def main(s_index, e_index, is_table):
-    execute_generation(s_index, e_index, is_table)
+def main(is_table):
+    execute_generation(is_table)
  
 # Running main function
 if __name__ == '__main__':
-    NUMBER_OF_ARGUMENTS = 3
+    NUMBER_OF_ARGUMENTS = 1
     args = sys.argv[1:]
-    if len(args) != NUMBER_OF_ARGUMENTS:
+    if len(args) != {NUMBER_OF_ARGUMENTS}:
         print(f"Unexpeceted number of arguments received. Expected: {NUMBER_OF_ARGUMENTS}; Received: {len(args)}")
     else:
         try:
-            s_index = int(args[0])
-            e_index = int(args[1])
-            is_table = args[2].lower() == "true"
+            is_table = args[0].lower() == "true"
         except ValueError as e:
             print(f"Error occurred while processing arguments: {e}")
         else:
-            execute_generation(s_index, e_index, is_table)
+            execute_generation(is_table)
