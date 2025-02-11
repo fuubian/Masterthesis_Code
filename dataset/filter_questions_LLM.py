@@ -12,7 +12,8 @@ result_file = workspace_dir + "filtering_pairs.csv"
 
 # Prompt
 validation_prompt = """
-For the following Question-Answer-pair, does the question really contain a question and is its corresponding answer truthfully? Answer with a simple 'Yes' or 'No'.
+For the following Question-Answer pair related to a table or figure, determine whether the question is well-formed 
+and meaningful, and whether the provided answer is logically and factually correct. Respond with a simple 'Yes' or 'No'.
 Question: {question}
 Answer: {answer}
 """
@@ -26,16 +27,16 @@ def get_qa_pairs(file_path, max_number):
         max_number (int): Number of how many qa-pairs should be extracted. If 0, all pairs will be extracted.
 
     Returns:
-        set ((str, str, str)): A set of tuples, containing the object_id, question and answer.
+        list[(str, str, str)]: A list of tuples, containing the object_id, question and answer.
     """
-    qa_pairs = set()
+    qa_pairs = []
     with open(file_path, "r", encoding="utf-8") as input_file:
         spamreader = csv.reader(input_file, delimiter=';', quotechar='|', quoting=csv.QUOTE_MINIMAL)
         for row in spamreader:
             object_id = row[0]
             question = row[2]
             answer = row[3]
-            qa_pairs.add((object_id, question, answer))
+            qa_pairs.append((object_id, question, answer))
     
     return qa_pairs
 
@@ -55,7 +56,7 @@ def generate_response(question, answer, model, tokenizer):
     input_prompt = validation_prompt.replace("{question}", question).replace("{answer}", answer)
     
     messages = [
-        {"role": "system", "content": "You are Qwen, created by Alibaba Cloud. You are a helpful assistant that can understand and generate question-answer pairs from scientific data."},
+        {"role": "system", "content": "You are Qwen, created by Alibaba Cloud. You are a helpful assistant that can understand Question-Answer pairs from scientific data."},
         {"role": "user", "content": input_prompt}
     ]
     text = tokenizer.apply_chat_template(
@@ -73,17 +74,16 @@ def generate_response(question, answer, model, tokenizer):
         output_ids[len(input_ids):] for input_ids, output_ids in zip(model_inputs.input_ids, generated_ids)
     ]
 
-    # Receiving the results and store them in file
     response = tokenizer.batch_decode(generated_ids, skip_special_tokens=True)[0]
-
     return response
 
-def main(max_number):
+def main(start_index, max_number):
     """
     Main function. Loads the model, tokenizer and validates QA-pairs. Results will be written into a csv file.
 
     Args:
-        max_number (int): Number of how many qa-pairs should be used. If 0, all pairs will be used.
+        start_index (int): The index of the first QA-pair that shall be validated.
+        max_number (int): Number of how many QA-pairs should be used. If 0, all pairs will be used.
     """
 
     # Loading model
@@ -96,26 +96,42 @@ def main(max_number):
     tokenizer = AutoTokenizer.from_pretrained(model_id, trust_remote_code=True)
     qa_pairs = get_qa_pairs(qa_pair_file, max_number)
 
-    for pair in qa_pairs:
-        try:
-            model_response = generate_response(pair[1], pair[2], model, tokenizer)
-        except Exception as e:
-            print(f"Error: {e}")
-        else:
-            with open(result_file, "a", encoding="utf-8") as output_file:
-                csv_writer = csv.writer(output_file, delimiter=';', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+    # Opening output file
+    with open(result_file, "a", encoding="utf-8") as output_file:
+        csv_writer = csv.writer(output_file, delimiter=';', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+
+        # Iteratung through QA-pairs
+        counter = 0
+        for pair in qa_pairs:
+            if counter < start_index:
+                counter += 1
+                continue
+            try:
+                model_response = generate_response(pair[1], pair[2], model, tokenizer)
+            except Exception as e:
+                print(f"Error: {e}")
+            else:
                 csv_writer.writerow([pair[0], pair[1], pair[2], model_response])
+
+                # Flushing every 100 entries
+                if counter % 100 == 0:
+                    output_file.flush()
+                    os.fsync(output_file.fileno())
+            counter += 1
+            if counter == start_index + max_number:
+                break
 
 # Running main function
 if __name__ == '__main__':
-    NUMBER_OF_ARGUMENTS = 1
+    NUMBER_OF_ARGUMENTS = 2
     args = sys.argv[1:]
     if len(args) != NUMBER_OF_ARGUMENTS:
-        print(f"Unexpeceted number of arguments received. Expected: NUMBER_OF_ARGUMENTS; Received: {len(args)}")
+        print(f"Unexpected number of arguments received. Expected: {NUMBER_OF_ARGUMENTS}; Received: {len(args)}")
     else:
         try:
-            max_number = int(args[0])
+            start_index = int(args[0])
+            max_number = int(args[1])
         except ValueError as e:
             print(f"Error occurred while processing arguments: {e}")
         else:
-            main(max_number)
+            main(start_index, max_number)
