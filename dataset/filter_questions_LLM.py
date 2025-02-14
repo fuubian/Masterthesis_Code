@@ -12,8 +12,10 @@ result_file = workspace_dir + "filtering_pairs.csv"
 
 # Prompt
 validation_prompt = """
-For the following Question-Answer pair related to a table or figure, determine whether the question is well-formed 
-and meaningful, and whether the provided answer is logically and factually correct. Respond with a simple 'Yes' or 'No'.
+To estimate the validity for the following question-answer pair related to an unknown table or figure, determine whether:
+(1) The question is well-formed and meaningful.
+(2) The provided answer is analogous to the question and contains no obvious error.
+Respond with a simple 'Valid' or 'Invalid'. Important: If not enough information is available to determine whether an answer is correct based on the given context, return 'Valid'.
 Question: {question}
 Answer: {answer}
 """
@@ -97,7 +99,7 @@ def main(start_index, max_number):
     qa_pairs = get_qa_pairs(qa_pair_file, max_number)
 
     # Opening output file
-    with open(result_file, "a", encoding="utf-8") as output_file:
+    with open(result_file, "a", newline="", encoding="utf-8") as output_file:
         csv_writer = csv.writer(output_file, delimiter=';', quotechar='|', quoting=csv.QUOTE_MINIMAL)
 
         # Iteratung through QA-pairs
@@ -111,7 +113,7 @@ def main(start_index, max_number):
             except Exception as e:
                 print(f"Error: {e}")
             else:
-                csv_writer.writerow([pair[0], pair[1], pair[2], model_response])
+                csv_writer.writerow([pair[0], pair[1], pair[2], model_response.split()[0]])
 
                 # Flushing every 100 entries
                 if counter % 100 == 0:
