@@ -2,3 +2,4 @@ lxml
 pdf2image
 pdflatex
 pandas
+regex

@@ -9,6 +9,7 @@ class TextImageModel(ABC):
             model_name (str): The name of the model so that it can be loaded from HuggingFace.
         """
         self.model_name = model_name
+        print(f"{self.model_name} is loaded.")
 
     @abstractmethod
     def generate_answer(self, question_prompt, image):
