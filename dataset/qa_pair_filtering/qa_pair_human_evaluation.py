@@ -9,6 +9,8 @@ from tkinter import font
 qa_pair_file = "dataset/test_split.csv"
 positive_output_file = "dataset/qa_pairs_accepted.csv"
 negative_output_file = "dataset/qa_pairs_rejected.csv"
+figure_metadata_file = "dataset/extracted_figures/figures.csv"
+table_metadata_file = "dataset/extracted_tables/tables.csv"
 image_path_tables = "dataset/extracted_tables/table_images/"
 image_path_figures = "dataset/extracted_figures/"
 
@@ -18,6 +20,8 @@ object_type_index = 1
 question_index = 2
 answer_index = 3
 
+caption_index = 3
+
 # Create output files
 if not os.path.exists(positive_output_file):
     with open(positive_output_file, "w"):
@@ -25,6 +29,18 @@ if not os.path.exists(positive_output_file):
 if not os.path.exists(negative_output_file):
     with open(negative_output_file, "w"):
         pass
+
+def load_captions(file_paths):
+    caption_dict = {}
+
+    for file in file_paths:
+        with open(file, "r", encoding="utf-8") as input_f:
+            csv_reader = csv.reader(input_f, delimiter=';', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+
+            for row in csv_reader:
+                caption_dict[row[object_id_index]] = row[caption_index]
+
+    return caption_dict
 
 def get_set_of_evaluated_questions():
     """
@@ -81,6 +97,7 @@ def update_display():
     object_type = row[object_type_index]
     question = row[question_index]
     answer = row[answer_index]
+    caption = caption_dict[object_id]
 
     # Update index label
     index_label.config(text=f"Index: {current_index} / {len(data)}")
@@ -105,11 +122,14 @@ def update_display():
 
     if os.path.exists(image_path):
         img = Image.open(image_path)
-        img.thumbnail((500,500))
+        img.thumbnail((600,600))
         img = ImageTk.PhotoImage(img)
         img_label.config(image=img)
     else:
         img_label.config(text=f"Image not found: {image_path}", image='')
+
+    # Add caption
+    caption_label.config(text=f"Caption: {caption}")
 
 def classify(positive_class):
     """
@@ -134,6 +154,7 @@ def classify(positive_class):
 
 # Load csv and start index
 data = pd.read_csv(qa_pair_file, delimiter=";", quotechar="|", header=None)
+caption_dict = load_captions([table_metadata_file, figure_metadata_file])
 current_index = identify_lowest_index()
 
 # GUI setup
@@ -149,6 +170,9 @@ text_widget.tag_configure("bold", font=bold_font)
 
 img_label = tk.Label(root)
 img_label.pack()
+
+caption_label = tk.Label(root, text="", wraplength=500, pady=2)
+caption_label.pack()
 
 index_label = tk.Label(root, text="", wraplength=400, pady=2)
 index_label.pack()
