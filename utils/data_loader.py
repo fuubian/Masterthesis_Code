@@ -3,8 +3,8 @@ import config
 import csv
 import regex as re
 
-class QADataLoader:
-
+class DataLoader:
+    
     @staticmethod
     def check_data_availability():
         """
@@ -21,19 +21,28 @@ class QADataLoader:
             
     @staticmethod
     def load_qa_test_data(include_table_code):
-        QADataLoader.check_data_availability()
+        """
+        This methods loads the test split data of task 1.
+        
+        Args:
+            include_table_code (bool): Whether the code of tables is also prompted as an input.
+
+        Returns:
+            dict: A dictionary containing all relevant data to run inference on the model for task 1.
+        """
+        DataLoader.check_data_availability()
 
         # Load QA-pairs in dictionary
-        qa_test_split = QADataLoader.read_csv_file(config.QA_TEST_SPLIT_PATH, columns=[2,3])
+        qa_test_split = DataLoader.read_csv_file(config.QA_TEST_SPLIT_PATH, columns=[2,3])
         object_ids = set(qa_test_split.keys())
 
         # Load image paths
         for object_id in object_ids:
-            qa_test_split[object_id].append(QADataLoader.get_image_path(object_id))
+            qa_test_split[object_id].append(DataLoader.get_image_path(object_id))
 
         # Load captions
-        figure_captions = QADataLoader.read_csv_file(config.FIGURE_METADATA_PATH, columns=[3], selected_ids=object_ids)
-        table_captions = QADataLoader.read_csv_file(config.TABLE_METADATA_PATH, columns=[3], selected_ids=object_ids)
+        figure_captions = DataLoader.read_csv_file(config.FIGURE_METADATA_PATH, columns=[3], selected_ids=object_ids)
+        table_captions = DataLoader.read_csv_file(config.TABLE_METADATA_PATH, columns=[3], selected_ids=object_ids)
         for object_id in object_ids:
             if config.TABLE_NAME_FORMAT in object_id:
                 qa_test_split[object_id].append(table_captions[object_id][0])
@@ -44,7 +53,7 @@ class QADataLoader:
         if include_table_code:
             for object_id in object_ids:
                 if config.TABLE_NAME_FORMAT in object_id:
-                    qa_test_split[object_id].append(QADataLoader.get_table_code(object_id))
+                    qa_test_split[object_id].append(DataLoader.get_table_code(object_id))
                 else:
                     qa_test_split[object_id].append(None)
 
@@ -52,6 +61,17 @@ class QADataLoader:
 
     @staticmethod
     def read_csv_file(path, columns, selected_ids=None):
+        """
+        This function opens a csv file and extracts relevant information into a dictionary.
+
+        Args:
+            path (str): The file path to the csv file.
+            columns (list[int]): A list of all columns that contain information that shall be extracted.
+            selected_ids (list[str]): A list of object ids to specify from which selected rows information shall be stored. Default is None.
+
+        Returns:
+            dict: A dictionary containing all extracted information for each object id.
+        """
         output_dict = {}
 
         with open(path, "r", encoding="utf-8") as csv_file:
@@ -69,6 +89,15 @@ class QADataLoader:
     
     @staticmethod
     def get_image_path(object_id):
+        """
+        This functions derivates the exact file path to an image based on the corresponding object id.
+        
+        Args:
+            object_id (str): The id of either a table or a figure.
+            
+        Returns:
+            str: The path to the image file.
+        """
         object_path = None
         if config.TABLE_NAME_FORMAT in object_id:
             object_path = os.path.join(config.TABLE_IMAGE_PATH, object_id)
@@ -83,6 +112,15 @@ class QADataLoader:
     
     @staticmethod
     def get_table_code(object_id):
+        """
+        This function returns the latex code of a table by locating its corresponding file within the dataset.
+
+        Args:
+            object_id (str): The id of the table.
+
+        Returns:
+            str: The latex code of the table.
+        """
         code_path = os.path.join(config.TABLE_CODE_PATH, object_id)
         file = open(code_path, "r", encoding="utf-8")
         table_code = file.read()

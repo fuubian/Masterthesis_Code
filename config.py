@@ -19,3 +19,9 @@ TABLE_CODE_PATH = os.path.join(DATASET_PATH, "tables", "code")
 # The name formats for table and figure files
 TABLE_NAME_FORMAT = "_TAB_"
 FIGURE_NAME_FORMAT = "_FIG_"
+
+# Output paths
+OUTPUT_PATH = os.path.join(BASE_DIR, "output")
+TASK1_OUTPUT = os.path.join(OUTPUT_PATH, "task1")
+TASK2_OUTPUT = os.path.join(OUTPUT_PATH, "task2")
+TASK3_OUTPUT = os.path.join(OUTPUT_PATH, "task3")
