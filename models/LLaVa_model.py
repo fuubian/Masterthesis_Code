@@ -3,7 +3,7 @@ import torch
 from transformers import AutoProcessor, LlavaForConditionalGeneration
 
 class LLaVaModel(TextImageModel):
-    def __init__(self, model_name="llava-hf/llava-1.5-13b"):
+    def __init__(self, model_name="llava-hf/llava-1.5-13b-hf"):
         super().__init__(model_name)
         self._load_model()
 
@@ -27,7 +27,8 @@ class LLaVaModel(TextImageModel):
         ).to(self.model.device, torch.float16)
 
         generate_ids = self.model.generate(**inputs, max_new_tokens=30)
-        model_response = self.processor.batch_decode(generate_ids, skip_special_tokens=True)
+        model_response = self.processor.batch_decode(generate_ids, skip_special_tokens=True)[0]
+        model_response = model_response.split("ASSISTANT:")[-1].strip()
 
         return model_response
 

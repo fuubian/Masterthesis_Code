@@ -25,7 +25,7 @@ def run_inference(model_name, model, task_number, include_table_code, data):
 
         # Run inference for each QA-pair
         for object_id in data:
-            prompt, question, solution, image_path = get_correct_prompt(task_number, object_id, data[object_id, include_table_code])
+            prompt, question, solution, image_path = get_correct_prompt(task_number, object_id, data[object_id], include_table_code)
 
             try:
                 model_response = model.generate_answer(prompt, image_path)
@@ -122,7 +122,7 @@ def modifity_prompt_task23(task_number, object_id, row_data):
 
     # Modify the prompt
     prompt = prompts.PROMPT_TEMPLATE_TASK23.replace("{question}", question)
-    for x in range(3):
+    for x in range(4):
         prompt = prompt.replace(f"{{option{x+1}}}", answer_options[x])
 
     return prompt, None, solution, image_path

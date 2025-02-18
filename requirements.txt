@@ -5,3 +5,4 @@ pandas
 regex
 Pillow
 transformers >= 4.35.3
+accelerate >=0.26.0
