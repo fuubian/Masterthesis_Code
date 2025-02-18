@@ -1,6 +1,7 @@
 import os
 import config
 import csv
+import random
 import regex as re
 
 class DataLoader:
@@ -9,12 +10,9 @@ class DataLoader:
     def check_data_availability():
         """
         This method checks if the dataset files, which are set in the config file, exist. Otherwise, a ValueError is raised.
-        """
-        if not os.path.exists(config.DATASET_PATH):
-            raise ValueError("No dataset directory was found. Please configure the config file and ensure its existence.")
-        
-        important_paths = [config.FIGURE_FILES_PATH, config.FIGURE_METADATA_PATH, config.QA_TEST_SPLIT_PATH, config.QA_TRAIN_SPLIT_PATH,
-                        config.TABLE_CODE_PATH, config.TABLE_IMAGE_PATH, config.TABLE_METADATA_PATH]
+        """        
+        important_paths = [config.DATASET_PATH, config.FIGURE_FILES_PATH, config.FIGURE_METADATA_PATH, config.QA_TEST_SPLIT_PATH, config.QA_TRAIN_SPLIT_PATH,
+                        config.TABLE_CODE_PATH, config.TABLE_IMAGE_PATH, config.TABLE_METADATA_PATH, config.QA_TEST_TASK2_PATH, config.QA_TEST_TASK3_PATH]
         for path in important_paths:
             if not os.path.exists(path):
                 raise ValueError(f"{path} could not be found. Please check the config file.")
@@ -58,6 +56,47 @@ class DataLoader:
                     qa_test_split[object_id].append(None)
 
         return qa_test_split
+    
+    @staticmethod
+    def load_task_data(task_number):
+        """
+        This functions load the test data for either task 2 or task 3.
+
+        Args:
+            task_number (int): The number of the task. This value must be either 2 or 3.
+
+        Returns:
+            dict: A dictionary containing the answer options, the correct solution, and the image path.
+        """
+        DataLoader.check_data_availability()
+
+        file_path = None
+        if task_number == 2:
+            file_path = config.QA_TEST_TASK2_PATH
+        elif task_number == 3:
+            file_path = config.QA_TEST_TASK3_PATH
+        else:
+            raise ValueError(f"Unexpeceted task number received. Value must be 2 or 3.")
+        
+        data_dict = DataLoader.read_csv_file(file_path, [1,2,3,4])
+
+        # Shuffle answer options
+        for object_id in data_dict:
+            answer_options = data_dict[object_id]
+            indexed_list = list(enumerate(answer_options))
+
+            random.shuffle(indexed_list)
+            shuffled_list = [val for _, val in indexed_list]
+            correct_answer = next(i for i, val in enumerate(shuffled_list) if val == answer_options[0])+1
+
+            data_dict[object_id] = shuffled_list
+            data_dict[object_id].append(correct_answer)
+
+        # Load image paths
+        for object_id in data_dict:
+            data_dict[object_id].append(DataLoader.get_image_path(object_id))
+
+        return data_dict
 
     @staticmethod
     def read_csv_file(path, columns, selected_ids=None):
@@ -100,9 +139,9 @@ class DataLoader:
         """
         object_path = None
         if config.TABLE_NAME_FORMAT in object_id:
-            object_path = os.path.join(config.TABLE_IMAGE_PATH, object_id)
+            object_path = os.path.join(config.TABLE_IMAGE_PATH, object_id + ".png")
         elif config.FIGURE_NAME_FORMAT in object_id:
-            object_path = os.path.join(config.FIGURE_FILES_PATH)
+            object_path = os.path.join(config.FIGURE_FILES_PATH, object_id + ".png")
         else:
             raise ValueError(f"Unknown object type received: {object_id}")
         
@@ -121,7 +160,7 @@ class DataLoader:
         Returns:
             str: The latex code of the table.
         """
-        code_path = os.path.join(config.TABLE_CODE_PATH, object_id)
+        code_path = os.path.join(config.TABLE_CODE_PATH, object_id + ".tex")
         file = open(code_path, "r", encoding="utf-8")
         table_code = file.read()
         file.close()

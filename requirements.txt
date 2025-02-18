@@ -4,3 +4,4 @@ pdflatex
 pandas
 regex
 Pillow
+transformers >= 4.35.3

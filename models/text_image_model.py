@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
 
 class TextImageModel(ABC):
-    
     def __init__(self, model_name):
         """
         Initializing the object.
