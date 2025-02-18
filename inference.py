@@ -19,7 +19,7 @@ def run_inference(model_name, model, task_number, include_table_code, data):
     """
     # Open output file
     inference_counter = 0
-    output_path = os.path.join(config.TASK1_OUTPUT, model_name + f"_responses_task{task_number}.csv")
+    output_path = get_output_path(task_number, model_name)
     with open(output_path, "w", newline="", encoding="utf-8") as output_file:
         csv_writer = csv.writer(output_file, delimiter=';', quotechar='|', quoting=csv.QUOTE_MINIMAL)
 
@@ -47,6 +47,27 @@ def run_inference(model_name, model, task_number, include_table_code, data):
 
     # Print message
     print(f"Inference for task {task_number} has been completed.")
+
+def get_output_path(task_number, model_name):
+    """
+    This function returns the output path for the corresponding task.
+
+    Args:
+        task_number (int): The number of the task. The value must be in range [1,3].
+        model_name (str): The name of the model that is used.
+
+    Returns:
+        str: The output path to a csv file in which the model responses will be stored.
+    """
+    output_dir = None
+    if task_number == 1:
+        output_dir = config.TASK1_OUTPUT
+    elif task_number == 2:
+        output_dir = config.TASK2_OUTPUT
+    elif task_number == 3:
+        output_dir = config.TASK3_OUTPUT
+
+    return os.path.join(output_dir, model_name + f"_responses_task{task_number}.csv")
 
 def get_correct_prompt(task_number, object_id, row_data, include_table_code):
     """
