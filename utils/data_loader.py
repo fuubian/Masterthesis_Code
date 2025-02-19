@@ -172,3 +172,26 @@ class DataLoader:
         table_code = found_tables[0]
 
         return table_code
+    
+    @staticmethod
+    def get_output_path(task_number, model_name):
+        """
+        This function returns the output path for the corresponding task.
+
+        Args:
+            task_number (int): The number of the task. The value must be in range [1,3].
+            model_name (str): The name of the model that is used.
+
+        Returns:
+            str: The output path to a csv file in which the model responses will be stored.
+        """
+        output_dir = None
+        if task_number == 1:
+            output_dir = config.TASK1_OUTPUT
+        elif task_number == 2:
+            output_dir = config.TASK2_OUTPUT
+        elif task_number == 3:
+            output_dir = config.TASK3_OUTPUT
+
+        os.path.join(output_dir, model_name + f"_responses_task{task_number}.csv")
+        return os.path.join(output_dir, model_name + f"_responses_task{task_number}.csv")
