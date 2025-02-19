@@ -6,7 +6,7 @@ Question: {question}
 """
 
 PROMPT_TEMPLATE_TASK23 = """
-Answer the following multiple choice question by providing the correct letter (A, B, C, or D).
+Answer the following single choice question by providing the correct letter (A, B, C, or D).
 Provide only the letter corresponding to the correct answer.
 
 Question: {question}
