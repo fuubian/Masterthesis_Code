@@ -29,6 +29,7 @@ def run_inference(model_name, model, task_number, include_table_code, data):
 
             try:
                 model_response = model.generate_answer(prompt, image_path)
+                model_response = model_response.replace(";", ",").replace("|", "-").replace("\n", " ")   
             except Exception as e:
                 model_response = f"The model was not able to produce an answer: {e}"
             else:
