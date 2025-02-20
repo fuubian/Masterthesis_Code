@@ -2,7 +2,7 @@ from models.text_image_model import TextImageModel
 from lmdeploy import pipeline, TurbomindEngineConfig
 from lmdeploy.vl import load_image
 
-class OvisModel(TextImageModel):
+class InternVLModel(TextImageModel):
     def __init__(self, model_name="OpenGVLab/InternVL2_5-8B"):
         super().__init__(model_name)
 

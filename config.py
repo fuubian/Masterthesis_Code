@@ -29,3 +29,13 @@ OUTPUT_PATH = os.path.join(BASE_DIR, "output")
 TASK1_OUTPUT = os.path.join(OUTPUT_PATH, "task1")
 TASK2_OUTPUT = os.path.join(OUTPUT_PATH, "task2")
 TASK3_OUTPUT = os.path.join(OUTPUT_PATH, "task3")
+
+# Model list
+LLAVA_MODEL_NAME = "llava"
+DEEPSEEK_MODEL_NAME = "deepseek"
+QWEN_MODEL_NAME = "qwen"
+INSTRCUCTBLIP_MODEL_NAME = "blip"
+OVIS_MODEL_NAME = "ovis"
+PALIGEMMA_MODEL_NAME = "paligemma"
+PIXTRAL_MODEL_NAME = "pixtral"
+INTERNVL_MODEL_NAME = "internvl"
