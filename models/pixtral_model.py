@@ -1,4 +1,6 @@
 from models.text_image_model import TextImageModel
+from utils.token_loader import TokenLoader
+from huggingface_hub import login
 from vllm import LLM
 from vllm.sampling_params import SamplingParams
 
@@ -22,5 +24,8 @@ class PixtralModel(TextImageModel):
         return model_response[0].outputs[0].text
 
     def _load_model(self):
+        access_token = TokenLoader.load_token_huggingface()
+        login(access_token)
+        
         self.sampling_params = SamplingParams(max_tokens=8192)
         self.model = LLM(model=self.model_name, tokenizer_mode="mistral")

@@ -1,4 +1,6 @@
 from models.text_image_model import TextImageModel
+from utils.token_loader import TokenLoader
+from huggingface_hub import login
 from transformers import PaliGemmaProcessor, PaliGemmaForConditionalGeneration
 from transformers.image_utils import load_image
 import torch
@@ -22,5 +24,8 @@ class PaligemmaModel(TextImageModel):
         return model_response
 
     def _load_model(self):
+        access_token = TokenLoader.load_token_huggingface()
+        login(access_token)
+
         self.model = PaliGemmaForConditionalGeneration.from_pretrained(self.model_name, torch_dtype=torch.bfloat16, device_map="auto").eval()
         self.processor = PaliGemmaProcessor.from_pretrained(self.model_name)
