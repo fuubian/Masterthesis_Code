@@ -18,7 +18,7 @@ class TextImageModel(ABC):
 
         Args:
             question_prompt (str): The prompt containing the question.
-            image (Image): The image object on which the question revolves.
+            image (str): The path to the image file.
 
         Returns:
             str: The model's response to the prompt.

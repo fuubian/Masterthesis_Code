@@ -4,7 +4,11 @@ pdflatex
 pandas
 regex
 Pillow
-torch
-transformers >= 4.35.3
+torch >= 2.4.0
+transformers >= 4.46.2
 accelerate >= 0.26.0
 qwen-vl-utils
+flash-attn >= 2.7.0
+vLLM >= v0.6.2
+mistral_common >= 1.4.4
+lmdeploy >= 0.6.4

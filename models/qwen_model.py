@@ -12,7 +12,7 @@ class QwenModel(TextImageModel):
             {
                 "role": "user",
                 "content": [
-                    {"type": "image", "file_path": image},
+                    {"type": "image", "image": image},
                     {"type": "text", "text": question_prompt},
                 ],
             },
