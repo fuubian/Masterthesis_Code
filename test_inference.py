@@ -22,9 +22,10 @@ def main(model_name):
     # Trying to run inference for one qa_pair
     data = DataLoader.load_task_data(2)
     test_prompt = "Explain me what you can see in this image."
-    image = random.choice(list(data.keys()))
+    random_object = random.choice(list(data.keys()))
+    image_path = DataLoader.get_image_path(random_object)
     try:
-        response = model.generate_answer(test_prompt, image)
+        response = model.generate_answer(test_prompt, image_path)
         print(f"Model response: {response}")
     except Exception as e:
         print(f"{model_name} was not able to produce a response: {e}")
