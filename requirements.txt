@@ -12,3 +12,5 @@ flash-attn >= 2.7.0
 vLLM >= v0.6.2
 mistral_common >= 1.4.4
 lmdeploy >= 0.6.4
+huggingface_hub
+timm

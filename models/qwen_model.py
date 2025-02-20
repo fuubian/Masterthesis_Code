@@ -37,7 +37,7 @@ class QwenModel(TextImageModel):
             generated_ids_trimmed, skip_special_tokens=True, clean_up_tokenization_spaces=False
         )
 
-        return model_response
+        return model_response[0]
 
     def _load_model(self):
         self.model = Qwen2_5_VLForConditionalGeneration.from_pretrained(self.model_name, torch_dtype="auto", device_map="auto")
