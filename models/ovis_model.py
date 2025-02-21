@@ -8,7 +8,7 @@ class OvisModel(TextImageModel):
         super().__init__(model_name)
         self._load_model()
 
-    def generate_answer(self, question_prompt, image):
+    def generate_answer(self, question_prompt, image, max_answer_length=1024):
         # Set query
         images = [Image.open(image)]
         max_partition = 9
@@ -26,7 +26,7 @@ class OvisModel(TextImageModel):
         # generate output
         with torch.inference_mode():
             gen_kwargs = dict(
-                max_new_tokens=1024,
+                max_new_tokens=max_answer_length,
                 do_sample=False,
                 top_p=None,
                 top_k=None,

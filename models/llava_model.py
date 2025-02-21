@@ -7,7 +7,7 @@ class LLaVaModel(TextImageModel):
         super().__init__(model_name)
         self._load_model()
 
-    def generate_answer(self, question_prompt, image):
+    def generate_answer(self, question_prompt, image, max_answer_length=30):
         conversation = [
             {
                 "role": "user",
@@ -26,7 +26,7 @@ class LLaVaModel(TextImageModel):
             return_tensors="pt"
         ).to(self.model.device, torch.float16)
 
-        generate_ids = self.model.generate(**inputs, max_new_tokens=30)
+        generate_ids = self.model.generate(**inputs, max_new_tokens=max_answer_length)
         model_response = self.processor.batch_decode(generate_ids, skip_special_tokens=True)[0]
         model_response = model_response.split("ASSISTANT:")[-1].strip()
 

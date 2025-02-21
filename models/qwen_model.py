@@ -7,7 +7,7 @@ class QwenModel(TextImageModel):
         super().__init__(model_name)
         self._load_model()
 
-    def generate_answer(self, question_prompt, image):
+    def generate_answer(self, question_prompt, image, max_answer_length=128):
         conversation = [
             {
                 "role": "user",
@@ -29,7 +29,7 @@ class QwenModel(TextImageModel):
         )
         inputs = inputs.to("cuda")
 
-        generated_ids = self.model.generate(**inputs, max_new_tokens=128)
+        generated_ids = self.model.generate(**inputs, max_new_tokens=max_answer_length)
         generated_ids_trimmed = [
             out_ids[len(in_ids) :] for in_ids, out_ids in zip(inputs.input_ids, generated_ids)
         ]

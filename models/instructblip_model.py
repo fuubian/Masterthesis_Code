@@ -8,7 +8,7 @@ class InstructBlipModel(TextImageModel):
         super().__init__(model_name)
         self._load_model()
 
-    def generate_answer(self, question_prompt, image):
+    def generate_answer(self, question_prompt, image, max_answer_length=256):
         image = Image.open(image).convert("RGB")
         inputs = self.processor(images=image, text=question_prompt, return_tensors="pt").to(self.device)
 
@@ -16,7 +16,7 @@ class InstructBlipModel(TextImageModel):
             **inputs,
             do_sample=False,
             num_beams=5,
-            max_length=256,
+            max_length=max_answer_length,
             min_length=1,
             top_p=0.9,
             repetition_penalty=1.5,

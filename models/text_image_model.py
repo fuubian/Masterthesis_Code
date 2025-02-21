@@ -12,13 +12,14 @@ class TextImageModel(ABC):
         print(f"{self.model_name} is loaded.")
 
     @abstractmethod
-    def generate_answer(self, question_prompt, image):
+    def generate_answer(self, question_prompt, image, max_answer_length):
         """
         Generates an answer for a question based on an image.
 
         Args:
             question_prompt (str): The prompt containing the question.
             image (str): The path to the image file.
+            max_answer_length (int): Number of maximum tokens that should be in the response.
 
         Returns:
             str: The model's response to the prompt.

@@ -9,7 +9,7 @@ class DeepSeekModel(TextImageModel):
         super().__init__(model_name)
         self._load_model()
 
-    def generate_answer(self, question_prompt, image):
+    def generate_answer(self, question_prompt, image, max_answer_length=512):
         conversation = [
             {
                 "role": "<|User|>",
@@ -38,7 +38,7 @@ class DeepSeekModel(TextImageModel):
             pad_token_id=self.tokenizer.eos_token_id,
             bos_token_id=self.tokenizer.bos_token_id,
             eos_token_id=self.tokenizer.eos_token_id,
-            max_new_tokens=512,
+            max_new_tokens=max_answer_length,
             do_sample=False,
             use_cache=True
         )

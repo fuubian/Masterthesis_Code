@@ -6,6 +6,8 @@ import prompt_templates as prompts
 from utils.text_image_loader import TextImageLoader
 from utils.data_loader import DataLoader
 
+MAX_NEW_TOKENS_TASK23 = 10
+
 def run_inference(model_name, model, task_number, include_table_code, data):
     """
     This functions prompts the QA-pairs to a model and stores it responses in a separate csv file.
@@ -28,7 +30,7 @@ def run_inference(model_name, model, task_number, include_table_code, data):
             prompt, question, solution, image_path = get_correct_prompt(task_number, object_id, data[object_id], include_table_code)
 
             try:
-                model_response = model.generate_answer(prompt, image_path)
+                model_response = model.generate_answer(prompt, image_path, MAX_NEW_TOKENS_TASK23)
                 model_response = model_response.replace(";", ",").replace("|", "-").replace("\n", " ")   
             except Exception as e:
                 model_response = f"The model was not able to produce an answer: {e}"
