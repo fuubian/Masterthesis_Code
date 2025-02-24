@@ -4,7 +4,7 @@ import torch
 from PIL import Image
 
 class InstructBlipModel(TextImageModel):
-    def __init__(self, model_name="Salesforce/instructblip-vicuna-7b"):
+    def __init__(self, model_name="Salesforce/instructblip-vicuna-13b"):
         super().__init__(model_name)
         self._load_model()
 
