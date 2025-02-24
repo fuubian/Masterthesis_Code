@@ -28,4 +28,5 @@ class PixtralModel(TextImageModel):
         access_token = TokenLoader.load_token_huggingface()
         login(access_token)
         
-        self.model = LLM(model=self.model_name, tokenizer_mode="mistral")
+         #TODO: Remove multiple GPUs before submission
+        self.model = LLM(model=self.model_name, tokenizer_mode="mistral", tensor_parallel_size=2)

@@ -1,5 +1,5 @@
 import config
-from models import instructblip_model, internvl_model, llava_model, ovis_model, paligemma_model, pixtral_model, qwen_model
+from models import instructblip_model, internvl_model, llava_model, ovis_model, paligemma_model, pixtral_model, qwen_model, minicpm_model
 #from models import deepseek_model
 
 """
@@ -19,6 +19,8 @@ class TextImageLoader:
             return internvl_model.InternVLModel()
         if model_name.lower() == config.LLAVA_MODEL_NAME:
             return llava_model.LLaVaModel()
+        if model_name.lower() == config.MINICPM_MODEL_NAME:
+            return minicpm_model.MiniCPMModel()
         if model_name.lower() == config.OVIS_MODEL_NAME:
             return ovis_model.OvisModel()
         if model_name.lower() == config.PALIGEMMA_MODEL_NAME:

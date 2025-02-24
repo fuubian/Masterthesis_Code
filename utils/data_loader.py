@@ -5,7 +5,6 @@ import random
 import regex as re
 
 class DataLoader:
-    
     @staticmethod
     def check_data_availability():
         """

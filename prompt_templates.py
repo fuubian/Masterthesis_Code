@@ -1,8 +1,11 @@
 PROMPT_TEMPLATE_TASK1 = """
-Answer the following question regarding a scientific {object} in a short way:
+Provide a concise answer, consisting of as few words as possible, to the following question based on this scientific {object}:
+
 {object} caption: {caption}
 {table_code_filler}
+
 Question: {question}
+Answer:
 """
 
 PROMPT_TEMPLATE_TASK23 = """
@@ -14,6 +17,8 @@ A) {option1}
 B) {option2}
 C) {option3}
 D) {option4}
+
+Answer:
 """
 
 QUESTION_TASK2 = "To which of these paper title does the following {object} belong?"
