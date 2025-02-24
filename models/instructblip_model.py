@@ -25,7 +25,7 @@ class InstructBlipModel(TextImageModel):
         )
 
         model_response = self.processor.batch_decode(outputs, skip_special_tokens=True)[0].strip()
-        model_response.replace(question_prompt, "")
+        model_response = model_response.replace(question_prompt, "")
         return model_response
 
     def _load_model(self):

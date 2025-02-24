@@ -26,7 +26,7 @@ class LLaVaModel(TextImageModel):
         
         output = self.model.generate(**inputs, max_new_tokens=max_answer_length)
         model_response = self.processor.decode(output[0], skip_special_tokens=True)
-        #model_response = model_response.split("ASSISTANT:")[-1].strip()
+        model_response = model_response.split("ASSISTANT:")[-1].strip()
 
         return model_response
 

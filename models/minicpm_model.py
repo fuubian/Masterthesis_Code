@@ -3,7 +3,7 @@ import torch
 from PIL import Image
 from transformers import AutoModel, AutoTokenizer
 
-class LLaVaModel(TextImageModel):
+class MiniCPMModel(TextImageModel):
     def __init__(self, model_name="openbmb/MiniCPM-o-2_6"):
         super().__init__(model_name)
         self._load_model()
