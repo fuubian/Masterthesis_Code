@@ -21,3 +21,5 @@ vector-quantize-pytorch==1.18.5
 vocos==0.1.0
 decord
 moviepy
+bitsandbytes
+-e ./DeepSeek-VL

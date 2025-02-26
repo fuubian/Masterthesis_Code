@@ -1,10 +1,10 @@
 from models.text_image_model import TextImageModel
+import torch
 from transformers import Qwen2_5_VLForConditionalGeneration, AutoTokenizer, AutoProcessor
 from qwen_vl_utils import process_vision_info
-import torch
 
 class QwenModel(TextImageModel):
-    def __init__(self, model_name="Qwen/Qwen2.5-VL-7B-Instruct"):
+    def __init__(self, model_name="Qwen/Qwen2.5-VL-7B-Instruct-AWQ"):
         super().__init__(model_name)
         self._load_model()
 
@@ -42,5 +42,5 @@ class QwenModel(TextImageModel):
         return model_response[0]
 
     def _load_model(self):
-        self.model = Qwen2_5_VLForConditionalGeneration.from_pretrained(self.model_name, torch_dtype="auto", device_map="auto")
+        self.model = Qwen2_5_VLForConditionalGeneration.from_pretrained(self.model_name, torch_dtype=torch.float16, device_map="auto")
         self.processor = AutoProcessor.from_pretrained(self.model_name)
