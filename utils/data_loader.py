@@ -17,7 +17,7 @@ class DataLoader:
                 raise ValueError(f"{path} could not be found. Please check the config file.")
             
     @staticmethod
-    def load_qa_test_data(include_table_code):
+    def load_data_task1(include_table_code):
         """
         This methods loads the test split data of task 1.
         
@@ -57,7 +57,7 @@ class DataLoader:
         return qa_test_split
     
     @staticmethod
-    def load_task_data(task_number):
+    def load_data_task23(task_number):
         """
         This functions load the test data for either task 2 or task 3.
 
@@ -194,3 +194,24 @@ class DataLoader:
 
         os.path.join(output_dir, model_name + f"_responses_task{task_number}.csv")
         return os.path.join(output_dir, model_name + f"_responses_task{task_number}.csv")
+    
+    @staticmethod
+    def remove_already_inferenced_objects(output_path, data):
+        """
+        This function removes elements from the QA dictionary which were already processed and are part of the output file.
+        
+        Args:
+            output_path (str): The path to the output file in which the model responses are stored.
+            data (dict): A dictionary containing all relevant data to run inference on the model.
+
+        Returns:
+            dict: The updated version of the dict without already-processed elements.
+        """
+        if os.path.exists(output_path):
+            with open(output_path, "r", encoding="utf-8") as former_output:
+                csv_reader = csv.reader(former_output, delimiter=';', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+
+                for row in csv_reader:
+                    if row[0] in data:
+                        del data[row[0]]
+        return data

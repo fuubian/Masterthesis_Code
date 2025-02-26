@@ -22,18 +22,20 @@ def run_inference(model_name, model, task_number, include_table_code, data):
     # Open output file
     inference_counter = 0
     output_path = DataLoader.get_output_path(task_number, model_name)
-    with open(output_path, "w", newline="", encoding="utf-8") as output_file:
+    data = DataLoader.remove_already_inferenced_objects(output_path, data)
+    with open(output_path, "a", newline="", encoding="utf-8") as output_file:
         csv_writer = csv.writer(output_file, delimiter=';', quotechar='|', quoting=csv.QUOTE_MINIMAL)
 
         # Run inference for each QA-pair
+        print(f"Inference started for {len(data)} objects.")
         for object_id in data:
             prompt, question, solution, image_path = get_correct_prompt(task_number, object_id, data[object_id], include_table_code)
 
             try:
-                model_response = model.generate_answer(prompt, image_path, MAX_NEW_TOKENS_TASK23)
+                model_response = model.generate_answer(prompt, image_path)
                 model_response = model_response.replace(";", ",").replace("|", "-").replace("\n", " ")   
             except Exception as e:
-                model_response = f"The model was not able to produce an answer: {e}"
+                print(f"The model was not able to produce an answer: {e}")
             else:
                 if question:
                     # Task 1
@@ -162,9 +164,9 @@ def load_task_data(task_number, include_table_code):
         dict: A dictionary containing all relevant data to run inference on the model.
     """
     if task_number == 1:
-        return DataLoader.load_qa_test_data(include_table_code)
+        return DataLoader.load_data_task1(include_table_code)
     elif task_number == 2 or task_number == 3:
-        return DataLoader.load_task_data(task_number)
+        return DataLoader.load_data_task23(task_number)
     raise ValueError(f"Unexpected task_number received: {task_number}. A value in range 1-3 was expected.")
 
 def create_output_dirs():

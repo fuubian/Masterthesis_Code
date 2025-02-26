@@ -32,4 +32,9 @@ class InstructBlipModel(TextImageModel):
         self.model = InstructBlipForConditionalGeneration.from_pretrained(self.model_name)
         self.processor = InstructBlipProcessor.from_pretrained(self.model_name)
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
+
+        if torch.cuda.device_count() > 1:
+            print(f"Using {torch.cuda.device_count()} GPUs for inference")
+            self.model = torch.nn.DataParallel(self.model)
+
         self.model.to(self.device)

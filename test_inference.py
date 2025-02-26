@@ -20,7 +20,7 @@ def main(model_name):
         sys.exit()
 
     # Trying to run inference for one qa_pair
-    data = DataLoader.load_task_data(2)
+    data = DataLoader.load_data_task23(2)
     test_prompt = "Explain me what you can see in this image."
     random_object = random.choice(list(data.keys()))
     image_path = DataLoader.get_image_path(random_object)
