@@ -2,6 +2,9 @@
 # https://github.com/NielsRogge/Transformers-Tutorials/blob/master/LLaVa/Fine_tune_LLaVa_on_a_custom_dataset_(with_PyTorch_Lightning).ipynb
 # https://colab.research.google.com/drive/1LFcri1CHxNWXG6W4DnTXorUvRT_xY0kd?usp=sharing#scrollTo=nGTCqz8QPO5u
 
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import config
 from utils.data_loader import DataLoader
 from datasets import load_dataset

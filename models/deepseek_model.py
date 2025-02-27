@@ -5,7 +5,7 @@ from deepseek_vl.models import DeepseekVLV2Processor, DeepseekVLV2ForCausalLM
 from deepseek_vl.utils.io import load_pil_images
 
 class DeepSeekModel(TextImageModel):
-    def __init__(self, model_name="deepseek-ai/deepseek-vl2-small"):
+    def __init__(self, model_name="deepseek-ai/deepseek-vl2-tiny"):
         super().__init__(model_name)
         self._load_model()
 

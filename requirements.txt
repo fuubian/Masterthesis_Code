@@ -23,4 +23,5 @@ decord
 moviepy
 bitsandbytes
 autoawq
+trl
 -e ./DeepSeek-VL
