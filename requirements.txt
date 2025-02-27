@@ -22,4 +22,5 @@ vocos==0.1.0
 decord
 moviepy
 bitsandbytes
+autoawq
 -e ./DeepSeek-VL

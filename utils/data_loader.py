@@ -3,6 +3,7 @@ import config
 import csv
 import random
 import regex as re
+import prompt_templates as prompts
 
 class DataLoader:
     @staticmethod

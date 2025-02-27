@@ -4,7 +4,7 @@ import torch
 from PIL import Image
 
 class InstructBlipModel(TextImageModel):
-    def __init__(self, model_name="Salesforce/instructblip-vicuna-13b"):
+    def __init__(self, model_name="Salesforce/instructblip-vicuna-7b"):
         super().__init__(model_name)
         self._load_model()
 
@@ -29,10 +29,8 @@ class InstructBlipModel(TextImageModel):
 
     def _load_model(self):
         quantization_config = BitsAndBytesConfig(load_in_8bit=True)
-        self.model = InstructBlipForConditionalGeneration.from_pretrained(self.model_name)
-        self.processor = InstructBlipProcessor.from_pretrained(self.model_name,
-                                                               device_map="auto",
-                                                               quantization_config=quantization_config)
+        self.model = InstructBlipForConditionalGeneration.from_pretrained(self.model_name, device_map="auto", quantization_config=quantization_config)
+        self.processor = InstructBlipProcessor.from_pretrained(self.model_name)
 
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
         self.model.to(self.device)
