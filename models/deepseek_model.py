@@ -1,8 +1,8 @@
 from models.text_image_model import TextImageModel
 import torch
 from transformers import AutoModelForCausalLM
-from deepseek_vl.models import DeepseekVLV2Processor, DeepseekVLV2ForCausalLM
-from deepseek_vl.utils.io import load_pil_images
+from deepseek_vl2.models import DeepseekVLV2Processor, DeepseekVLV2ForCausalLM
+from deepseek_vl2.utils.io import load_pil_images
 
 class DeepSeekModel(TextImageModel):
     def __init__(self, model_name="deepseek-ai/deepseek-vl2-tiny"):

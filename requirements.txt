@@ -24,4 +24,4 @@ moviepy
 bitsandbytes
 autoawq
 trl
--e ./DeepSeek-VL
+-e ./DeepSeek-VL2
