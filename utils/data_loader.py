@@ -256,8 +256,8 @@ class DataLoader:
                     csv_writer = csv.writer(new_output, delimiter=';', quotechar='|', quoting=csv.QUOTE_MINIMAL)
 
                     for row in csv_reader:
-                        if config.FIGURE_NAME_FORMAT in row[0] and row[0]in data:
+                        if config.FIGURE_NAME_FORMAT in row[0] and row[0] in data:
                             csv_writer.writerow(row)
                             del data[row[0]]
 
-        return output_path, data
+        return new_output_path, data

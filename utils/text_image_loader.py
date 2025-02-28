@@ -29,4 +29,4 @@ class TextImageLoader:
             return pixtral_model.PixtralModel()
         if model_name.lower() == config.QWEN_MODEL_NAME:
             return qwen_model.QwenModel()
-        raise ValueError("Undefined model name received. Please check the model list to identify the correct model name.")
+        raise ValueError(f"Undefined model name received: {model_name}. Please check the model list to identify the correct model name.")
