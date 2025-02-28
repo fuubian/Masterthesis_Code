@@ -1,6 +1,6 @@
 import config
 import prompt_templates as prompts
-from data_loader import DataLoader
+from .data_loader import DataLoader
 
 class PromptLoader:
     @staticmethod

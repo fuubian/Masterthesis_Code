@@ -3,7 +3,6 @@ import config
 import csv
 import random
 import regex as re
-import prompt_templates as prompts
 
 class DataLoader:
     @staticmethod
@@ -17,6 +16,23 @@ class DataLoader:
             if not os.path.exists(path):
                 raise ValueError(f"{path} could not be found. Please check the config file.")
             
+    def load_task_data(task_number, include_table_code):
+        """
+        This method identifies the needed data based on the task number and returns it.
+
+        Args:
+            task_number (int): The number of the executed task. Value must be in range [1,3].
+            include_table_code (bool): Whether the code of tables is also prompted as an input.
+
+        Returns:
+            dict: A dictionary containing all relevant data to run inference on the model.
+        """
+        if task_number == 1:
+            return DataLoader.load_data_task1(include_table_code)
+        elif task_number == 2 or task_number == 3:
+            return DataLoader.load_data_task23(task_number)
+        raise ValueError(f"Unexpected task_number received: {task_number}. A value in range 1-3 was expected.")
+
     @staticmethod
     def load_data_task1(include_table_code):
         """
@@ -216,3 +232,32 @@ class DataLoader:
                     if row[0] in data:
                         del data[row[0]]
         return data
+    
+    @staticmethod 
+    def remove_figure_inferenced_objects(output_path, data):
+        """
+        This function removes figures from the QA dictionary which were already processed in the setting without table_code.
+        Additionally, it creates a new csv file containg already infereced figure rows.
+        
+        Args:
+            output_path (str): The path to the output file in which the former model responses are stored.
+            data (dict): A dictionary containing all relevant data to run inference on the model.
+
+        Returns:
+            str: The path to the new output_file for the table_code setting.
+            dict: The updated version of the dict without already-processed figures.
+        """
+        new_output_path = output_path.replace(".csv", "_code.csv")
+        if os.path.exists(output_path):
+            with open(output_path, "r", encoding="utf-8") as former_output:
+                csv_reader = csv.reader(former_output, delimiter=';', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+
+                with open(new_output_path, "w", newline="", encoding="utf-8") as new_output:
+                    csv_writer = csv.writer(new_output, delimiter=';', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+
+                    for row in csv_reader:
+                        if config.FIGURE_NAME_FORMAT in row[0] and row[0]in data:
+                            csv_writer.writerow(row)
+                            del data[row[0]]
+
+        return output_path, data

@@ -4,7 +4,7 @@ from PIL import Image
 from transformers import AutoModelForCausalLM
 
 class OvisModel(TextImageModel):
-    def __init__(self, model_name="AIDC-AI/Ovis2-16B"):
+    def __init__(self, model_name="AIDC-AI/Ovis2-8B"):
         super().__init__(model_name)
         self._load_model()
 

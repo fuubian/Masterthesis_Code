@@ -22,7 +22,10 @@ def run_inference(model_name, model, task_number, include_table_code, data):
     # Open output file
     inference_counter = 0
     output_path = DataLoader.get_output_path(task_number, model_name)
-    data = DataLoader.remove_already_inferenced_objects(output_path, data)
+    if (task_number == 1 and include_table_code):
+        output_path, data = DataLoader.remove_figure_inferenced_objects(output_path, data)
+    else:
+        data = DataLoader.remove_already_inferenced_objects(output_path, data)
     with open(output_path, "a", newline="", encoding="utf-8") as output_file:
         csv_writer = csv.writer(output_file, delimiter=';', quotechar='|', quoting=csv.QUOTE_MINIMAL)
 
@@ -53,23 +56,6 @@ def run_inference(model_name, model, task_number, include_table_code, data):
     # Print message
     print(f"Inference for task {task_number} has been completed.")
 
-def load_task_data(task_number, include_table_code):
-    """
-    This method identifies the needed data based on the task number and returns it.
-
-    Args:
-        task_number (int): The number of the executed task. Value must be in range [1,3].
-        include_table_code (bool): Whether the code of tables is also prompted as an input.
-
-    Returns:
-        dict: A dictionary containing all relevant data to run inference on the model.
-    """
-    if task_number == 1:
-        return DataLoader.load_data_task1(include_table_code)
-    elif task_number == 2 or task_number == 3:
-        return DataLoader.load_data_task23(task_number)
-    raise ValueError(f"Unexpected task_number received: {task_number}. A value in range 1-3 was expected.")
-
 def create_output_dirs():
     """
     This function creates the directories in which the ouput file shall be stored.
@@ -89,7 +75,7 @@ def main(task_number, model_name, include_table_code):
         include_table_code (bool): Whether the code of tables is also prompted as an input.
     """
     model = TextImageLoader.load_model(model_name)
-    data = load_task_data(task_number, include_table_code)
+    data = DataLoader.load_task_data(task_number, include_table_code)
     print("Model and data were successfully loaded.")
 
     create_output_dirs()
