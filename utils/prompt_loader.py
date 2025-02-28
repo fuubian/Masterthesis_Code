@@ -67,7 +67,7 @@ class PromptLoader:
         # Retrieve data
         object_type = "Table" if config.TABLE_NAME_FORMAT in object_id else "Figure"
         answer_options = row_data[:4]
-        solution = DataLoader.convert_number_to_letter(row_data[4])
+        solution = PromptLoader.convert_number_to_letter(row_data[4])
         image_path = row_data[5]
 
         # Retrieve the correct question based on task number
