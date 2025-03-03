@@ -1,14 +1,10 @@
 import config
+import regex as re
+from metric import Metric
 
-class Accuracy:
+class Accuracy(Metric):
     @staticmethod
-    def exact_match(data_dict):
-        """
-        This function calculates and prints the exact match accuracy for task 2 and 3.
-
-        Args:
-            data_dict (dict): A dictionary containing for each object_id the correct solution and the model's response.
-        """
+    def evaluate(data_dict):
         categories = {
             "Overall": {"matches": 0, "total": len(data_dict)},
             "Figure": {"matches": 0, "total": 0},
@@ -21,14 +17,28 @@ class Accuracy:
             category = "Figure" if is_figure else "Table"
 
             categories[category]["total"] += 1
-            if data_dict[object_id][0] == data_dict[object_id][1]:
+            processed_response = Accuracy.process_model_response(data_dict[object_id][1])
+            if data_dict[object_id][0] == processed_response:
                 categories[category]["matches"] += 1
         categories["Overall"]["matches"] = categories["Figure"]["matches"] + categories["Table"]["matches"]
 
         # Printing results
-        print("Results:")
-        print("=" * 30)
-        for category in categories:
-            match_count = categories[category]["matches"]
-            total_count = categories[category]["total"]
-            print(f"{category:<7}: {match_count:>5} / {total_count:<5} -> {match_count / total_count:.2%}")
+        Accuracy.print_results(categories)
+
+    @staticmethod
+    def process_model_response(response):
+        """
+        This function extracts the single-choice answer (A,B,C,D) from a model's response.
+
+        Args:
+            response (str): The response of a model for a single choice task.
+
+        Returns:
+            str: The extracted choice by the model. Either 'A', 'B', 'C', 'D', or '-1' if no exact choice could be extracted.
+        """
+        if len(len(response) == 1):
+            return response
+        regex_matches = re.findall(r"[ABCD]\)", response)
+        if len(regex_matches) == 1:
+            return regex_matches[0][0]
+        return "-1"
