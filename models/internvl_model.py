@@ -8,7 +8,7 @@ class InternVLModel(TextImageModel):
 
     def generate_answer(self, question_prompt, image, max_answer_length=500):
         image_object = load_image(image)
-        pipe = pipeline(self.model_name, backend_config=TurbomindEngineConfig(session_len=8192))
+        pipe = pipeline(self.model_name, backend_config=TurbomindEngineConfig(session_len=8192), offload_folder="offload_folder")
         model_response = pipe((question_prompt, image_object))
 
         return model_response.text
