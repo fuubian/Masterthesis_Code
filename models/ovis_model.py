@@ -44,6 +44,7 @@ class OvisModel(TextImageModel):
     def _load_model(self):
         self.model = AutoModelForCausalLM.from_pretrained(self.model_name,
                                              torch_dtype=torch.bfloat16,
+                                             llm_attn_implementation='eager',
                                              multimodal_max_length=32768,
                                              trust_remote_code=True).cuda()
         self.text_tokenizer = self.model.get_text_tokenizer()

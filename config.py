@@ -32,11 +32,11 @@ TASK3_OUTPUT = os.path.join(OUTPUT_PATH, "task3")
 
 # Model list
 LLAVA_MODEL_NAME = "llava"
-DEEPSEEK_MODEL_NAME = "deepseek"
 QWEN_MODEL_NAME = "qwen"
 INSTRCUCTBLIP_MODEL_NAME = "instructblip"
 OVIS_MODEL_NAME = "ovis"
 PALIGEMMA_MODEL_NAME = "paligemma"
-PIXTRAL_MODEL_NAME = "pixtral"
 INTERNVL_MODEL_NAME = "internvl"
-MINICPM_MODEL_NAME = "minicpm"
+INTERNVL_MODEL_NAME_4B = "internvl_4B"
+INTERNVL_MODEL_NAME_2B = "internvl_2B"
+INTERNVL_MODEL_NAME_1B = "internvl_1B"

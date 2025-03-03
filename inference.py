@@ -2,7 +2,7 @@ import sys
 import os
 import csv
 import config
-from utils.text_image_loader import TextImageLoader
+from utils.model_loader import ModelLoader
 from utils.data_loader import DataLoader
 from utils.prompt_loader import PromptLoader
 
@@ -74,7 +74,7 @@ def main(task_number, model_name, include_table_code):
         task_number (int): The number of the executed task. Value must be in range [1,3].
         include_table_code (bool): Whether the code of tables is also prompted as an input.
     """
-    model = TextImageLoader.load_model(model_name)
+    model = ModelLoader.load_model(model_name)
     data = DataLoader.load_task_data(task_number, include_table_code)
     print("Model and data were successfully loaded.")
 

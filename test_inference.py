@@ -1,6 +1,6 @@
 import sys
 import random
-from utils.text_image_loader import TextImageLoader
+from utils.model_loader import ModelLoader
 from utils.data_loader import DataLoader
 
 def main(model_name):
@@ -13,7 +13,7 @@ def main(model_name):
     # Trying to load the model
     model = None
     try:
-        model = TextImageLoader.load_model(model_name)
+        model = ModelLoader.load_model(model_name)
         print(f"{model_name} was successfully initialized.")
     except Exception as e:
         print(f"{model_name} could not be initialized: {e}")
