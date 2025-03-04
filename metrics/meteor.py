@@ -1,5 +1,6 @@
 import config
 from metrics.metric_template import Metric
+from utils.data_loader import DataLoader
 from nltk.translate.meteor_score import meteor_score
 
 class Meteor(Metric):
@@ -11,17 +12,19 @@ class Meteor(Metric):
             "Table": {"matches": 0, "total": 0}
         }
 
+        # Obtain latex-free answers as second reference
+        latex_free_dict = DataLoader.read_csv_file(config.QA_TEST_SPLIT_LATEX_CLEAN_PATH, [1])
+
         # Iterating through all pairs
         for object_id in data_dict:
             is_figure = config.FIGURE_NAME_FORMAT in object_id
             category = "Figure" if is_figure else "Table"
 
-            reference = Meteor.remove_latex(data_dict[object_id][1])
-            response = Meteor.remove_latex(data_dict[object_id][2])
-            reference_tokens = reference.split()
-            response_tokens = response.split()
+            reference_tokens = data_dict[object_id][1].split()
+            response_tokens = data_dict[object_id][2].split()
+            lf_reference_tokens = latex_free_dict[object_id][0].split()
 
-            score = meteor_score([reference_tokens], response_tokens)
+            score = meteor_score([reference_tokens, lf_reference_tokens], response_tokens)
 
             categories[category]["total"] += 1
             categories[category]["matches"] += score

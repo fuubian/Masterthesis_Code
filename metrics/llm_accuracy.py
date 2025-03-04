@@ -1,6 +1,7 @@
 import config
 import regex as re
 from metrics.metric_template import Metric
+from datetime import datetime
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 class LLMAccuracy(Metric):
@@ -42,25 +43,28 @@ class LLMAccuracy(Metric):
         tokenizer = AutoTokenizer.from_pretrained(model_id, trust_remote_code=True)
 
         # Iterating through all pairs
-        for object_id in data_dict:
-            is_figure = config.FIGURE_NAME_FORMAT in object_id
-            category = "Figure" if is_figure else "Table"
-            categories[category]["total"] += 1
+        filename = datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + ".txt"
+        with open(filename, "w", encoding="utf-8") as file_writer:
+            for object_id in data_dict:
+                is_figure = config.FIGURE_NAME_FORMAT in object_id
+                category = "Figure" if is_figure else "Table"
+                categories[category]["total"] += 1
 
-            question = data_dict[object_id][0]
-            reference = data_dict[object_id][1]
-            response = data_dict[object_id][2]
-            modified_prompt = LLMAccuracy.prompt.replace("{question}", question).replace("{reference}", reference).replace("{response}", response)
-            
-            try:
-                model_output = LLMAccuracy.generateResponse(model, tokenizer, modified_prompt)
-                model_output = LLMAccuracy.processOutput(model_output)
-            except Exception as e:
-                model_output = 0
-                print(f"Model was not able to produce a response: {e}")
+                question = data_dict[object_id][0]
+                reference = data_dict[object_id][1]
+                response = data_dict[object_id][2]
+                modified_prompt = LLMAccuracy.prompt.replace("{question}", question).replace("{reference}", reference).replace("{response}", response)
+                
+                try:
+                    model_output = LLMAccuracy.generateResponse(model, tokenizer, modified_prompt)
+                    file_writer.write(object_id + ": " + model_output + "\n")
+                    model_output = LLMAccuracy.processOutput(model_output)
+                except Exception as e:
+                    model_output = 0
+                    print(f"Model was not able to produce a response: {e}")
 
-                categories[category]["matches"] += model_output
-        categories["Overall"]["matches"] = categories["Figure"]["matches"] + categories["Table"]["matches"]
+                    categories[category]["matches"] += model_output
+            categories["Overall"]["matches"] = categories["Figure"]["matches"] + categories["Table"]["matches"]
 
         # Print results
         LLMAccuracy.print_results(categories)
