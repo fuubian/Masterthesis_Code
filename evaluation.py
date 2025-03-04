@@ -11,7 +11,7 @@ def main(task_number, model_name, metric_name):
         print(f"Output file does not exist. Please check the path: {output_path}")
         sys.exit()
     if task_number == 1:
-        output_data = DataLoader.read_csv_file(output_path, [1,3])
+        output_data = DataLoader.read_csv_file(output_path, [1,2,3])
     elif task_number == 2 or task_number == 3:
         output_data = DataLoader.read_csv_file(output_path, [1,2])
     
@@ -25,7 +25,7 @@ def main(task_number, model_name, metric_name):
 
 if __name__ == '__main__':
     args = sys.argv[1:]
-    if len(args) != 2 or len(args) != 3:
+    if len(args) != 2 and len(args) != 3:
         print(f"Unexpeceted number of arguments received. Expected: 2 or 3; Received: {len(args)}")
     else:
         try:

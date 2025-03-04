@@ -1,13 +1,18 @@
 import csv
 from transformers import AutoModelForCausalLM, AutoTokenizer
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
 from utils.data_loader import DataLoader
 
-input_file = "test_split.csv"
-output_file = "latex_clean_test_split.csv"
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
+input_file = os.path.join(PROJECT_ROOT, "data", "test_split.csv")
+output_file = os.path.join(PROJECT_ROOT, "data", "latex_clean_test_split.csv")
 
 prompt = """
 Extract the plain text from the following input, removing any LaTeX code.
 If no LaTeX code is present, return the input unchanged.
+Do not provide any explanations do your decision. Only return the plain text in your response.
 
 Input: {input}
 Output: 
@@ -56,10 +61,10 @@ def main():
         csv_writer = csv.writer(file, delimiter=';', quotechar='|', quoting=csv.QUOTE_MINIMAL)
 
         for object_id in test_set_dict:
-            input_reference = test_set_dict[object_id]
+            input_reference = test_set_dict[object_id][0]
             modified_prompt = prompt.replace("{input}", input_reference)
             try:
-                output_reference = generateResponse(model, tokenizer, modified_prompt)
+                output_reference = generateResponse(model, tokenizer, modified_prompt).replace(";", ",").replace("|", "-").replace("\n", " ")
             except Exception as e:
                 output_reference = ""
                 print(f"No model response received: {e}")

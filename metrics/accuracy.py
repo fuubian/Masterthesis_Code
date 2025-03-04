@@ -36,7 +36,7 @@ class Accuracy(Metric):
         Returns:
             str: The extracted choice by the model. Either 'A', 'B', 'C', 'D', or '-1' if no exact choice could be extracted.
         """
-        if len(len(response) == 1):
+        if len(response) == 1:
             return response
         regex_matches = re.findall(r"[ABCD]\)", response)
         if len(regex_matches) == 1:
