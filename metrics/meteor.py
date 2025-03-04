@@ -1,5 +1,5 @@
 import config
-from metric import Metric
+from metrics.metric_template import Metric
 from nltk.translate.meteor_score import meteor_score
 
 class Meteor(Metric):

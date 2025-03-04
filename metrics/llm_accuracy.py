@@ -1,6 +1,6 @@
 import config
 import regex as re
-from metric import Metric
+from metrics.metric_template import Metric
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 class LLMAccuracy(Metric):
