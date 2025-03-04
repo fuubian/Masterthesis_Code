@@ -28,9 +28,13 @@ class VQA_MQM(Metric):
         - Major Hallucination Error (-0.5): The response includes additional incorrect information that is not present in the reference.
 
     Acceptable Variations (no penalty):
-        - Different wording but the same meaning.
-        - Reference contains LaTeX, but the response does not.
+        - Using synonyms or an alternative phrasing while still conveying the same meaning.
+        - Using a different level of detail/specification while still answering the question sufficiently.
+        - Minor rounding differences for values.
+        - Different formatting.
+        - Response using no LaTeX-code while conveying still the same meaning.
         - "Ours" is used as a synonym for "proposed model."
+        - Different notation for the same mathematical concept.
 
     Assign a final score based on the penalties applied.
     Score: [your score]

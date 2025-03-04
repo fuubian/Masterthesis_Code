@@ -95,7 +95,7 @@ class LLMAccuracy(Metric):
     
     @staticmethod
     def processOutput(output):
-        regex_matches = re.findall(r"\b(0|0\.5|1)\b", output)
+        regex_matches = re.findall(r"Score: (0\.5|0|1)", output)
         if len(regex_matches) == 1:
-            return int(regex_matches[0])
+            return float(regex_matches[0])
         return 0
