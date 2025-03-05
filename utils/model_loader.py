@@ -1,5 +1,5 @@
 import config
-from models import instructblip_model, internvl_model, llava_model, ovis_model, paligemma_model, qwen_model
+from models import instructblip_model, internvl_model, llava_model, ovis_model, paligemma_model, qwen_model, valley_eagle_model
 
 class ModelLoader:
     @staticmethod
@@ -22,4 +22,6 @@ class ModelLoader:
             return paligemma_model.PaligemmaModel()
         if model_name.lower() == config.QWEN_MODEL_NAME:
             return qwen_model.QwenModel()
+        if model_name.lower() == config.VALLEY_EAGLE_MODEL_NAME:
+            return valley_eagle_model.ValleyEagleModel()
         raise ValueError(f"Undefined model name received: {model_name}. Please check the model list to identify the correct model name.")
