@@ -63,7 +63,7 @@ class LLMAccuracy(Metric):
                     model_output = 0
                     print(f"Model was not able to produce a response: {e}")
 
-                    categories[category]["matches"] += model_output
+                categories[category]["matches"] += model_output
             categories["Overall"]["matches"] = categories["Figure"]["matches"] + categories["Table"]["matches"]
 
         # Print results
