@@ -1,9 +1,9 @@
 import config
 from metrics.metric_template import Metric
 from utils.data_loader import DataLoader
-from pycocoevalcap.cider.cider import Cider
+from bert_score import score
 
-class CiderMetric(Metric):
+class BertScoreMetric(Metric):
     @staticmethod
     def evaluate(data_dict):
         categories = {
@@ -20,24 +20,18 @@ class CiderMetric(Metric):
             is_figure = config.FIGURE_NAME_FORMAT in object_id
             category = "Figure" if is_figure else "Table"
 
-            hypothesis = {"0": [data_dict[object_id][2]]} # Model response
-            references = {
-                "0": [
-                    data_dict[object_id][1],
-                    latex_free_dict[object_id][0]
-                ]  # Multiple reference answers
-            }
+            reference = data_dict[object_id][1]
+            response= data_dict[object_id][2]
+            lf_reference = latex_free_dict[object_id][0]
 
-            # Format the references to be in lower case
-            refs = {i: [r.lower() for r in references[i]] for i in references}
-            hyps = {i: [hypothesis[i][0].lower()] for i in hypothesis}  # Single hypothesis per image
+            references = [reference, lf_reference]
+            hypothesis = [response]
 
-            cider_scorer = Cider()
-            score, _ = cider_scorer.compute_score(refs, hyps)
+            P, R, F1 = score(hypothesis, references, lang="en", verbose=True)
 
             categories[category]["total"] += 1
-            categories[category]["matches"] += score
+            categories[category]["matches"] += F1
         categories["Overall"]["matches"] = categories["Figure"]["matches"] + categories["Table"]["matches"]
 
         # Printing results
-        CiderMetric.print_results(categories)
+        BertScoreMetric.print_results(categories)
