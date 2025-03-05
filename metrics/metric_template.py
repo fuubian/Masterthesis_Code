@@ -22,19 +22,4 @@ class Metric():
         for category in categories:
             match_count = categories[category]["matches"]
             total_count = categories[category]["total"]
-            print(f"{category:<7}: {match_count:>5} / {total_count:<5} -> {match_count / total_count:.2%}")
-
-    @staticmethod
-    def remove_latex(text):
-        """
-        This function replaces some latex snippets from a text to make it more applicable for n-gram overlap evaluation methods.
-        
-        Args:
-            text (str): The input text containing latex code.
-
-        Returns:
-            str: A cleaned version with less latex.
-        """
-        text = text.replace("\%", "%")
-        text = text.replace("$", "")
-        return text
+            print(f"{category:<7}: {match_count:5.2f} / {total_count:<5} -> {match_count / total_count:.2%}")

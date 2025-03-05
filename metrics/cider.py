@@ -1,9 +1,9 @@
 import config
 from metrics.metric_template import Metric
 from utils.data_loader import DataLoader
-from nltk.translate.meteor_score import meteor_score
+from pycocoevalcap.cider.cider import Cider
 
-class MeteorMetric(Metric):
+class CiderMetric(Metric):
     @staticmethod
     def evaluate(data_dict):
         categories = {
@@ -20,15 +20,24 @@ class MeteorMetric(Metric):
             is_figure = config.FIGURE_NAME_FORMAT in object_id
             category = "Figure" if is_figure else "Table"
 
-            reference_tokens = data_dict[object_id][1].split()
-            response_tokens = data_dict[object_id][2].split()
-            lf_reference_tokens = latex_free_dict[object_id][0].split()
+            hypothesis = {"0": [data_dict[object_id][2]]} # Model response
+            references = {
+                "0": [
+                    data_dict[object_id][1],
+                    latex_free_dict[object_id][0]
+                ]  # Multiple reference answers
+            }
 
-            score = meteor_score([reference_tokens, lf_reference_tokens], response_tokens)
+            # Format the references to be in lower case
+            refs = {i: [r.lower() for r in references[i]] for i in references}
+            hyps = {i: [hypothesis[i][0].lower()] for i in hypothesis}  # Single hypothesis per image
+
+            cider_scorer = Cider()
+            score, _ = cider_scorer.compute_score(refs, hyps)
 
             categories[category]["total"] += 1
             categories[category]["matches"] += score
         categories["Overall"]["matches"] = categories["Figure"]["matches"] + categories["Table"]["matches"]
 
         # Printing results
-        MeteorMetric.print_results(categories)
+        CiderMetric.print_results(categories)

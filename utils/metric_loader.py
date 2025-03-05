@@ -9,5 +9,5 @@ class MetricLoader:
         if metric_name == config.VQA_MQM_METRIC:
             return vqa_mqm.VQA_MQM()
         if metric_name == config.METEOR_METRIC:
-            return meteor.Meteor()
+            return meteor.MeteorMetric()
         raise ValueError(f"Undefined metric name received: {metric_name}. Please check the metric list to identify the correct metric name.")

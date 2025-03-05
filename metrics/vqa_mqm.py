@@ -25,7 +25,7 @@ class VQA_MQM(Metric):
         - Major Completeness Error (-0.5): The response misses some relevant information from the reference.
         - Critical Completeness Error (-1): The response misses all relevant information from the reference.
         - Minor Ambiguity Error (-0.25): The response is unclear or could be interpreted in multiple ways.
-        - Major Hallucination Error (-0.5): The response includes additional incorrect information that is not present in the reference.
+        - Major Hallucination Error (-0.5): The response includes additional information that is not present in the reference.
 
     Acceptable Variations (no penalty):
         - Using synonyms or an alternative phrasing while still conveying the same meaning.
@@ -36,7 +36,8 @@ class VQA_MQM(Metric):
         - "Ours" is used as a synonym for "proposed model."
         - Different notation for the same mathematical concept.
 
-    Assign a final score based on the penalties applied.
+    Assign a final score by starting with a value of 1.0 and reducing it based on the errors and penalties applied.
+    Your finale score shall be in the range [0,1]. If the scores falls below 0, return 0 as score.
     Score: [your score]
     List of errors:
     - [Error Category & Type]: [Brief explanation]

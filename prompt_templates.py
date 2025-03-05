@@ -21,5 +21,5 @@ D) {option4}
 Answer:
 """
 
-QUESTION_TASK2 = "To which of these paper title does the following {object} belong?"
+QUESTION_TASK2 = "To which of these paper titles does the following {object} belong?"
 QUESTION_TASK3 = "Which of these text passages reference the following {object}?"
