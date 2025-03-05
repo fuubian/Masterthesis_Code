@@ -4,7 +4,7 @@ from transformers import Qwen2_5_VLForConditionalGeneration, AutoProcessor
 from qwen_vl_utils import process_vision_info
 
 class QwenModel(TextImageModel):
-    def __init__(self, model_name="Qwen/Qwen2-VL-7B-Instruct"):
+    def __init__(self, model_name="Qwen/Qwen2.5-VL-7B-Instruct"):
         super().__init__(model_name)
         self._load_model()
 
