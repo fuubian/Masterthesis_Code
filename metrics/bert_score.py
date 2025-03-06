@@ -35,4 +35,4 @@ class BertScoreMetric(Metric):
         # Printing results
         print("Results of the evaluation with BERTScore:\n")
         for category in categories:
-            print(f"{category}: {categories[category]['matches']} for {categories[category]['total']} objects.")
+            print(f"{category}: {categories[category]['matches']:.2%} for {categories[category]['total']} objects.")

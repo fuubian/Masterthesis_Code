@@ -23,4 +23,4 @@ class Metric():
             match_count = categories[category]["matches"]
             total_count = categories[category]["total"]
             partion = match_count / total_count if total_count > 0 else 0
-            print(f"{category:<7}: {match_count:5.2f} / {total_count:<5} -> {partion:.2%}")
+            print(f"{category:<7}: {match_count:<5} / {total_count:<5} -> {partion:.2%}")
