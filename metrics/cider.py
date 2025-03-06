@@ -42,4 +42,4 @@ class CiderMetric(Metric):
         # Printing results
         print("Results of the evaluation with cider:\n")
         for category in categories:
-            print(f"{category}: {categories[category]["matches"]} for {categories[category]["total"]} objects.")
+            print(f"{category}: {categories[category]['matches']} for {categories[category]['total']} objects.")
