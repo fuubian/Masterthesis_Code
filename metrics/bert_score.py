@@ -27,12 +27,12 @@ class BertScoreMetric(Metric):
                     references.append(lf_reference)
                     hypothesises.append(response)
 
-            P, R, F1 = score(hypothesises, references, lang="en", verbose=True)
+            P, R, F1 = score(hypothesises, references, model_type="microsoft/deberta-xlarge-mnli", lang="en", verbose=True)
 
             categories[category]["total"] = len(references)
             categories[category]["matches"] = F1.mean().item()
 
         # Printing results
-        print("Results of the evaluation with cider:\n")
+        print("Results of the evaluation with BERTScore:\n")
         for category in categories:
             print(f"{category}: {categories[category]['matches']} for {categories[category]['total']} objects.")

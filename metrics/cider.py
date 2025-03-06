@@ -2,6 +2,7 @@ import config
 from metrics.metric_template import Metric
 from utils.data_loader import DataLoader
 from pycocoevalcap.cider.cider import Cider
+from nltk.tokenize import word_tokenize
 
 class CiderMetric(Metric):
     @staticmethod
@@ -21,12 +22,13 @@ class CiderMetric(Metric):
             hypothesises = {}
             current_index = 0
             for object_id in data_dict:
-                is_figure = config.FIGURE_NAME_FORMAT in object_id
-                category = "Figure" if is_figure else "Table"
-
                 if category == "Overall" or (category == "Figure" and config.FIGURE_NAME_FORMAT in object_id) or (category == "Table" and config.TABLE_NAME_FORMAT in object_id):
-                    hypothesises[current_index] =  [data_dict[object_id][2]]
-                    references[current_index] = [data_dict[object_id][1], latex_free_dict[object_id][0]]
+                    reference_tokens = word_tokenize(data_dict[object_id][1])
+                    response_tokens = word_tokenize(data_dict[object_id][2])
+                    lf_reference_tokens = word_tokenize(latex_free_dict[object_id][0])
+
+                    hypothesises[current_index] =  [response_tokens]
+                    references[current_index] = [reference_tokens, lf_reference_tokens]
                     current_index += 1
 
             # Format in lower case
