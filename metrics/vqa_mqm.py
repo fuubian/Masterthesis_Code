@@ -10,22 +10,17 @@ class VQA_MQM(Metric):
     prompt = """
     Evaluate the given model response based on its accuracy and alignment with the question and reference text. Follow these criteria:
 
-    Error Categories & Penalties
-        - Minor Error (-0.25): Small discrepancies that do not significantly alter the meaning.
-        - Major Error (-0.50): Significant errors that impact the correctness of key details.
-        - Critical Error (-1.00): Fundamental errors that make the response incorrect or misleading.
-
     Error Types & Definitions:
-        - Minor Value Error (-0.25): One value in the response is slightly different but still within an acceptable range.
-        - Major Value Error (-0,5): One of multiple values is significantly different, affecting correctness.
-        - Critical Value Error (-1): All values given in the response are significantly different.
-        - Minor Unit Error (-0.25): The response uses a different unit than the reference.
-        - Minor Reasoning Error (-0.25): The response presents reasoning that is slightly different from the reference.
-        - Critical Reasoning Error (-1): The response presents reasoning that is fundamentally different from the reference.
-        - Major Completeness Error (-0.5): The response misses some relevant information from the reference.
-        - Critical Completeness Error (-1): The response misses all relevant information from the reference.
-        - Minor Ambiguity Error (-0.25): The response is unclear or could be interpreted in multiple ways.
-        - Major Hallucination Error (-0.5): The response includes additional information that is not present in the reference.
+        - Minor Value Error: One value in the response is slightly different but still within an acceptable range.
+        - Major Value Error: One of multiple values is significantly different, affecting correctness.
+        - Critical Value Error: All values given in the response are significantly different.
+        - Minor Unit Error: The response uses a different unit than the reference.
+        - Minor Reasoning Error: The response presents reasoning that is slightly different from the reference.
+        - Critical Reasoning Error: The response presents reasoning that is fundamentally different from the reference.
+        - Major Completeness Error: The response misses some relevant information from the reference.
+        - Critical Completeness Error: The response misses all relevant information from the reference.
+        - Minor Ambiguity Error: The response is unclear or could be interpreted in multiple ways.
+        - Major Hallucination Error: The response includes additional information that is not present in the reference.
 
     Acceptable Variations (no penalty):
         - Using synonyms or an alternative phrasing while still conveying the same meaning.
@@ -36,11 +31,10 @@ class VQA_MQM(Metric):
         - "Ours" is used as a synonym for "proposed model."
         - Different notation for the same mathematical concept.
 
-    Assign a final score by starting with a value of 1.0 and reducing it based on the errors and penalties applied.
-    Your finale score shall be in the range [0,1]. If the scores falls below 0, return 0 as score.
+    Your output should look like this:
     Score: [your score]
     List of errors:
-    - [Error Category & Type]: [Brief explanation]
+    - [Error Type]: [Brief explanation]
 
     Your task:
     Evaluate the response for this question:
@@ -123,7 +117,7 @@ class VQA_MQM(Metric):
     def processOutput(output):
         score_match = re.search(r"Score:\s*(-?\d+(\.\d+)?)", output)
         if score_match:
-            score = score_match.group(1)
+            score = int(score_match.group(1))
         else:
             print(f"Score was not found for {output}")
             score = 0

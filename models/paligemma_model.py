@@ -6,14 +6,14 @@ from transformers.image_utils import load_image
 import torch
 
 class PaligemmaModel(TextImageModel):
-    def __init__(self, model_name="google/paligemma2-10b-pt-448"):
+    def __init__(self, model_name="google/paligemma2-10b-mix-448"):
         super().__init__(model_name)
         self._load_model()
 
     def generate_answer(self, question_prompt, image, max_answer_length=100):
         image = load_image(image)
 
-        model_inputs = self.processor(text=question_prompt, images=image, return_tensors="pt").to(torch.bfloat16).to(self.model.device)
+        model_inputs = self.processor(text="<image> " + question_prompt, images=image, return_tensors="pt").to(torch.bfloat16).to(self.model.device)
         input_len = model_inputs["input_ids"].shape[-1]
 
         with torch.inference_mode():
