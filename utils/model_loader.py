@@ -1,5 +1,5 @@
 import config
-from models import instructblip_model, internvl_model, llava_model, ovis_model, paligemma_model, qwen_model, valley_eagle_model
+from models import instructblip_model, internvl_model, internvl_4b_model, llava_model, ovis_model, paligemma_model, qwen_model, valley_eagle_model
 
 class ModelLoader:
     @staticmethod
@@ -13,7 +13,7 @@ class ModelLoader:
         if model_name.lower() == config.INTERNVL_MODEL_NAME_2B:
             return internvl_model.InternVLModel(model_name="OpenGVLab/InternVL2_5-2B")
         if model_name.lower() == config.INTERNVL_MODEL_NAME_4B:
-            return internvl_model.InternVLModel(model_name="OpenGVLab/InternVL2_5-4B")
+            return internvl_4b_model.InternVLModel()
         if model_name.lower() == config.LLAVA_MODEL_NAME:
             return llava_model.LLaVaModel()
         if model_name.lower() == config.OVIS_MODEL_NAME:
