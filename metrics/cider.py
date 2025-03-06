@@ -40,4 +40,6 @@ class CiderMetric(Metric):
             categories[category]["matches"] = score
 
         # Printing results
-        CiderMetric.print_results(categories)
+        print("Results of the evaluation with cider:\n")
+        for category in categories:
+            print(f"{category}: {categories[category]["matches"]} for {categories[category]["total"]} objects.")
