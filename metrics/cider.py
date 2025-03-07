@@ -5,7 +5,7 @@ from pycocoevalcap.cider.cider import Cider
 
 class CiderMetric(Metric):
     @staticmethod
-    def evaluate(data_dict):
+    def evaluate(data_dict, model_name):
         categories = {
             "Overall": {"matches": 0, "total": len(data_dict)},
             "Figure": {"matches": 0, "total": 0},
@@ -37,6 +37,6 @@ class CiderMetric(Metric):
             categories[category]["matches"] = score
 
         # Printing results
-        print("Results of the evaluation with cider:\n")
+        print(f"Results of {model_name} with cider:\n")
         for category in categories:
             print(f"{category}: {categories[category]['matches']:.2%} for {categories[category]['total']} objects.")

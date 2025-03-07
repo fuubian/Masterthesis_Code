@@ -5,7 +5,7 @@ from bert_score import score
 
 class BertScoreMetric(Metric):
     @staticmethod
-    def evaluate(data_dict):
+    def evaluate(data_dict, model_name):
         categories = {
             "Overall": {"matches": 0, "total": len(data_dict)},
             "Figure": {"matches": 0, "total": 0},
@@ -33,6 +33,6 @@ class BertScoreMetric(Metric):
             categories[category]["matches"] = F1.mean().item()
 
         # Printing results
-        print("Results of the evaluation with BERTScore:\n")
+        print(f"Results of {model_name} with BERTScore:\n")
         for category in categories:
             print(f"{category}: {categories[category]['matches']:.2%} for {categories[category]['total']} objects.")

@@ -1,7 +1,6 @@
 import config
 import regex as re
 from metrics.metric_template import Metric
-from datetime import datetime
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 class LLMAccuracy(Metric):
@@ -24,7 +23,7 @@ class LLMAccuracy(Metric):
     """
 
     @staticmethod
-    def evaluate(data_dict):
+    def evaluate(data_dict, model_name):
         categories = {
             "Overall": {"matches": 0, "total": len(data_dict)},
             "Figure": {"matches": 0, "total": 0},
@@ -43,7 +42,7 @@ class LLMAccuracy(Metric):
         tokenizer = AutoTokenizer.from_pretrained(model_id, trust_remote_code=True)
 
         # Iterating through all pairs
-        filename = datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + ".txt"
+        filename = model_name + "_LLM_Acc_evaluation.txt"
         with open(filename, "w", encoding="utf-8") as file_writer:
             for object_id in data_dict:
                 is_figure = config.FIGURE_NAME_FORMAT in object_id
@@ -67,7 +66,7 @@ class LLMAccuracy(Metric):
             categories["Overall"]["matches"] = categories["Figure"]["matches"] + categories["Table"]["matches"]
 
         # Print results
-        LLMAccuracy.print_results(categories)
+        LLMAccuracy.print_results(categories, model_name)
 
     @staticmethod
     def generateResponse(model, tokenizer, modified_prompt):

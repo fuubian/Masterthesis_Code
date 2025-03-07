@@ -1,38 +1,40 @@
 import config
 import regex as re
 from metrics.metric_template import Metric
-from datetime import datetime
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 class VQA_MQM(Metric):
+
+    # Error types
+    error_types = {
+        "Critical Non-Analogous Error": r"Critical Non-Analogous Error",
+        "Critical Value Error": r"Critical Value Error",
+        "Critical Reasoning Error": r"Critical Reasoning Error",
+        "Critical Completeness Error": r"Critical Completeness Error",
+        "Major Value Error": r"Major Value Error",
+        "Major Completeness Error": r"Major Completeness Error",
+        "Major Ambiguity Error": r"Major Ambiguity Error",
+        "Minor Value Error": r"Minor Value Error",
+        "Minor Reasoning Error": r"Minor Reasoning Error",
+    }
 
     # Evaluation prompt
     prompt = """
     Evaluate the given model response based on its accuracy and alignment with the question and reference text. Follow these criteria:
 
     Error Types & Definitions:
-        - Minor Value Error: One value in the response is slightly different but still within an acceptable range.
-        - Major Value Error: One of multiple values is significantly different, affecting correctness.
-        - Critical Value Error: All values given in the response are significantly different.
-        - Minor Unit Error: The response uses a different unit than the reference.
-        - Minor Reasoning Error: The response presents reasoning that is slightly different from the reference.
-        - Critical Reasoning Error: The response presents reasoning that is fundamentally different from the reference.
-        - Major Completeness Error: The response misses some relevant information from the reference.
-        - Critical Completeness Error: The response misses all relevant information from the reference.
-        - Minor Ambiguity Error: The response is unclear or could be interpreted in multiple ways.
-        - Major Hallucination Error: The response includes additional information that is not present in the reference.
-
+        {error_types}
     Acceptable Variations (no penalty):
         - Using synonyms or an alternative phrasing while still conveying the same meaning.
         - Using a different level of detail/specification while still answering the question sufficiently.
+        - Using a different unit while providing the same converted result.
         - Minor rounding differences for values.
         - Different formatting.
         - Response using no LaTeX-code while conveying still the same meaning.
         - "Ours" is used as a synonym for "proposed model."
         - Different notation for the same mathematical concept.
 
-    Your output should look like this:
-    Score: [your score]
+    Your output should be of the following format:
     List of errors:
     - [Error Type]: [Brief explanation]
 
@@ -43,8 +45,14 @@ class VQA_MQM(Metric):
     Response: {response}
     """
 
+    # Modify evaluation prompt to contain error list:
+    error_list_string = ""
+    for error_type in error_types:
+        error_list_string += f"- {error_type}: {error_types[error_type]}\n"
+    prompt = prompt.replace("{error_types}", error_list_string)
+
     @staticmethod
-    def evaluate(data_dict):
+    def evaluate(data_dict, model_name):
         categories = {
             "Overall": {"matches": 0, "total": len(data_dict)},
             "Figure": {"matches": 0, "total": 0},
@@ -63,7 +71,7 @@ class VQA_MQM(Metric):
         tokenizer = AutoTokenizer.from_pretrained(model_id, trust_remote_code=True)
 
         # Iterating through all pairs
-        filename = datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + ".txt"
+        filename = model_name + "MQM_evaluation.txt"
         with open(filename, "w", encoding="utf-8") as file_writer:
             for object_id in data_dict:
                 is_figure = config.FIGURE_NAME_FORMAT in object_id
@@ -87,7 +95,7 @@ class VQA_MQM(Metric):
             categories["Overall"]["matches"] = categories["Figure"]["matches"] + categories["Table"]["matches"]
 
         # Print results
-        VQA_MQM.print_results(categories)
+        VQA_MQM.print_results(categories, model_name)
 
     @staticmethod
     def generateResponse(model, tokenizer, modified_prompt):
@@ -115,10 +123,18 @@ class VQA_MQM(Metric):
     
     @staticmethod
     def processOutput(output):
-        score_match = re.search(r"Score:\s*(-?\d+(\.\d+)?)", output)
-        if score_match:
-            score = int(score_match.group(1))
-        else:
-            print(f"Score was not found for {output}")
-            score = 0
-        return score
+        current_score = 1.0
+        for type in VQA_MQM.error_types:
+            matches = len(re.findall(type, output))
+
+            if matches > 0:
+                if "Critical" in type:
+                    return 0
+                
+                penalty_value = 0.5 if "Major" in type else 0.25
+                current_score -= penalty_value * matches
+
+                if current_score <= 0:
+                    return 0
+        
+        return current_score

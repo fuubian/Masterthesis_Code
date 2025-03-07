@@ -4,7 +4,7 @@ from metrics.metric_template import Metric
 
 class Accuracy(Metric):
     @staticmethod
-    def evaluate(data_dict):
+    def evaluate(data_dict, model_name):
         categories = {
             "Overall": {"matches": 0, "total": len(data_dict)},
             "Figure": {"matches": 0, "total": 0},
@@ -23,7 +23,7 @@ class Accuracy(Metric):
         categories["Overall"]["matches"] = categories["Figure"]["matches"] + categories["Table"]["matches"]
 
         # Printing results
-        Accuracy.print_results(categories)
+        Accuracy.print_results(categories, model_name)
 
     @staticmethod
     def process_model_response(response):
