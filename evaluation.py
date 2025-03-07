@@ -17,11 +17,11 @@ def main(task_number, model_name, metric_name):
     
     # Apply accuracy for task 2 and 3
     if task_number == 2 or task_number == 3:
-        Accuracy.evaluate(output_data)
+        Accuracy.evaluate(output_data, model_name)
     
     if task_number == 1:
         metric = MetricLoader.load_metric(metric_name)
-        metric.evaluate(output_data)
+        metric.evaluate(output_data, model_name)
 
 if __name__ == '__main__':
     args = sys.argv[1:]
