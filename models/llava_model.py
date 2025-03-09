@@ -8,7 +8,7 @@ class LLaVaModel(TextImageModel):
         super().__init__(model_name)
         self._load_model()
 
-    def generate_answer(self, question_prompt, image, max_answer_length=30):
+    def generate_answer(self, question_prompt, image, max_answer_length=500):
         image = Image.open(image)
     
         conversation = [

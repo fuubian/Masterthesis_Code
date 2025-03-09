@@ -17,3 +17,5 @@ timm
 dotenv
 nltk
 pycocoevalcap
+sentencepiece==0.1.99
+decord

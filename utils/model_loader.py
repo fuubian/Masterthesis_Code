@@ -19,7 +19,7 @@ class ModelLoader:
         if model_name.lower() == config.LLAVA_MODEL_NAME:
             return llava_model.LLaVaModel()
         if model_name.lower() == config.MINICPM_MODEL_NAME:
-            return minicpm_model.MiniCPMModel
+            return minicpm_model.MiniCPMModel()
         if model_name.lower() == config.OVIS_MODEL_NAME:
             return ovis_model.OvisModel()
         if model_name.lower() == config.PALIGEMMA_MODEL_NAME:

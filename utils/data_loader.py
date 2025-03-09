@@ -115,6 +115,26 @@ class DataLoader:
         return data_dict
 
     @staticmethod
+    def remove_non_tables(data_dict):
+        """
+        For the purpose of evaluating VQAs about tables, for which latex code have been used, this function removes all figures from a data dictionary.
+        
+        Args:
+            data_dict (dict): A dictionary containing all model responses and ground truths for both tables and figures.
+            
+        Returns:
+            dict: A dictionary containing all responses and ground truths regarding the VQA task about tables with code.
+        """
+        table_dict = {}
+
+        for object_id in data_dict:
+            if config.TABLE_NAME_FORMAT in data_dict:
+                table_dict[object_id] = data_dict[object_id]
+
+        return table_dict
+
+
+    @staticmethod
     def read_csv_file(path, columns, selected_ids=None):
         """
         This function opens a csv file and extracts relevant information into a dictionary.
