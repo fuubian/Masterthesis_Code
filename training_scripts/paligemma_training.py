@@ -19,7 +19,7 @@ access_token = TokenLoader.load_token_huggingface()
 login(access_token)
 
 # Constants
-MODEL_ID = "google/paligemma2-10b-pt-448"
+MODEL_ID = "google/paligemma2-3b-pt-448"
 device = "cuda"
 
 # Load training dataset
@@ -29,14 +29,12 @@ train_data = split_datasets["train"]
 val_data = split_datasets["test"]
 
 # Load model and freeze layers
-"""
 model = PaliGemmaForConditionalGeneration.from_pretrained(MODEL_ID, torch_dtype=torch.bfloat16).to(device)
 for param in model.vision_tower.parameters():
     param.requires_grad = False
 
 for param in model.multi_modal_projector.parameters():
-    param.requires_grad = False"
-"""
+    param.requires_grad = False
 
 # Load model again for quantization and lora
 bnb_config = BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_compute_dtype=torch.bfloat16)
@@ -46,13 +44,8 @@ lora_config = LoraConfig(
     task_type="CAUSAL_LM",
 )
 
+
 model = PaliGemmaForConditionalGeneration.from_pretrained(MODEL_ID, device_map="auto", quantization_config=bnb_config, attn_implementation='eager')
-for param in model.vision_tower.parameters():
-    param.requires_grad = False
-
-for param in model.multi_modal_projector.parameters():
-    param.requires_grad = False
-
 model = get_peft_model(model, lora_config)
 model.print_trainable_parameters()
 
@@ -61,26 +54,28 @@ DTYPE = model.dtype
 
 image_token = processor.tokenizer.convert_tokens_to_ids("<image>")
 def collate_fn(examples):
-    image_paths = [DataLoader.get_image_path(example["image_id"]) for example in examples]
-    images = [read_image(path).permute(1, 2, 0) for path in image_paths]
-
     texts = ["<image> " + example["question"] for example in examples]
     labels= [example['answer'] for example in examples]
-    #images = [Image.open(DataLoader.get_image_path(example["image_id"])).convert("RGB") for example in examples]
+    images = [
+        Image.open(DataLoader.get_image_path(example["image_id"]))
+        .convert("RGB")
+        .resize((448, 448))  # Reduce resolution
+        for example in examples
+    ]
     tokens = processor(text=texts, images=images, suffix=labels,
                     return_tensors="pt", padding="longest")
     
-    tokens = {k: v.to(DTYPE).to(device) for k, v in tokens.items()}
+    tokens = tokens.to(DTYPE).to(device)
     return tokens
 
 # Set training arguments
 args=TrainingArguments(
-            num_train_epochs=3,
+            num_train_epochs=1,
             remove_unused_columns=False,
-            per_device_train_batch_size=1,
-            gradient_accumulation_steps=4,
+            per_device_train_batch_size=2,
+            gradient_accumulation_steps=8,
             warmup_steps=2,
-            learning_rate=2e-5,
+            learning_rate=3e-5,
             weight_decay=1e-6,
             adam_beta2=0.999,
             logging_steps=100,

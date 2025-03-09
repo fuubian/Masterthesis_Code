@@ -7,15 +7,15 @@ class VQA_MQM(Metric):
 
     # Error types
     error_types = {
-        "Critical Non-Analogous Error": r"Critical Non-Analogous Error",
-        "Critical Value Error": r"Critical Value Error",
-        "Critical Reasoning Error": r"Critical Reasoning Error",
-        "Critical Completeness Error": r"Critical Completeness Error",
-        "Major Value Error": r"Major Value Error",
-        "Major Completeness Error": r"Major Completeness Error",
-        "Major Ambiguity Error": r"Major Ambiguity Error",
-        "Minor Value Error": r"Minor Value Error",
-        "Minor Reasoning Error": r"Minor Reasoning Error",
+        "Critical Value Error": "All values given in the response are significantly different.",
+        "Critical Reasoning Error": "The response presents reasoning that is fundamentally different from the reference.",
+        "Major Completeness Error": "The response misses relevant information from the reference.",
+        "Major Value Error": "One of multiple values is significantly different, affecting correctness.",
+        "Major Ambiguity Error": "The response is unclear or could be interpreted in multiple ways.",
+        "Major Reasoning Error": "The response presents reasoning that is significantly different from the reference.",
+        "Minor Value Error": "A value in the response deviates slightly from the reference but remains within an acceptable range (less than 10% deviation).",
+        "Minor Reasoning Error": "The response presents reasoning that is slightly different from the reference.",
+        "Minor Completeness Error": "The response misses little information from the reference."
     }
 
     # Evaluation prompt
@@ -33,6 +33,8 @@ class VQA_MQM(Metric):
         - Response using no LaTeX-code while conveying still the same meaning.
         - "Ours" is used as a synonym for "proposed model."
         - Different notation for the same mathematical concept.
+        
+    IMPORTANT: Don't be strict when identifying errors. Allow minor variations that do not alter the overall meaning. Only classify an error as critical if you are absolutely certain it significantly impacts understanding. If a text span could fall under multiple error types, select only the most relevant one.
 
     Your output should be of the following format:
     List of errors:
@@ -85,8 +87,13 @@ class VQA_MQM(Metric):
                 
                 try:
                     model_output = VQA_MQM.generateResponse(model, tokenizer, modified_prompt)
+                    print("Question:", question)
+                    print("Reference:", reference)
+                    print("Response:", response)
+                    print(model_output)
                     file_writer.write(object_id + ": " + model_output + "\n")
                     model_output = VQA_MQM.processOutput(model_output)
+                    print(f"Score: {model_output}\n\n")
                 except Exception as e:
                     model_output = 0
                     print(f"Model was not able to produce a response: {e}")
