@@ -128,7 +128,7 @@ class DataLoader:
         table_dict = {}
 
         for object_id in data_dict:
-            if config.TABLE_NAME_FORMAT in data_dict:
+            if config.TABLE_NAME_FORMAT in object_id:
                 table_dict[object_id] = data_dict[object_id]
 
         return table_dict

@@ -87,13 +87,8 @@ class VQA_MQM(Metric):
                 
                 try:
                     model_output = VQA_MQM.generateResponse(model, tokenizer, modified_prompt)
-                    print("Question:", question)
-                    print("Reference:", reference)
-                    print("Response:", response)
-                    print(model_output)
                     file_writer.write(object_id + ": " + model_output + "\n")
                     model_output = VQA_MQM.processOutput(model_output)
-                    print(f"Score: {model_output}\n\n")
                 except Exception as e:
                     model_output = 0
                     print(f"Model was not able to produce a response: {e}")
