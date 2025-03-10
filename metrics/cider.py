@@ -7,7 +7,7 @@ class CiderMetric(Metric):
     @staticmethod
     def evaluate(data_dict, model_name):
         categories = {
-            "Overall": {"matches": 0, "total": len(data_dict)},
+            "Overall": {"matches": 0, "total": 0},
             "Figure": {"matches": 0, "total": 0},
             "Table": {"matches": 0, "total": 0}
         }
@@ -30,11 +30,12 @@ class CiderMetric(Metric):
                     references[current_index] = [lf_reference_tokens, reference_tokens]
                     current_index += 1
 
-            cider_scorer = Cider()
-            score, _ = cider_scorer.compute_score(references, hypothesises)
+            if current_index > 0:
+                cider_scorer = Cider()
+                score, _ = cider_scorer.compute_score(references, hypothesises)
 
-            categories[category]["total"] = current_index
-            categories[category]["matches"] = score
+                categories[category]["total"] = current_index
+                categories[category]["matches"] = score
 
         # Printing results
         print(f"Results of {model_name} with cider:\n")

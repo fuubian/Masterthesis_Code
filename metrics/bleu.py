@@ -1,9 +1,10 @@
 import config
 from metrics.metric_template import Metric
 from utils.data_loader import DataLoader
-from rouge_score import rouge_scorer
+from nltk.translate.bleu_score import sentence_bleu
+from nltk.tokenize import word_tokenize
 
-class RougeMetric(Metric):
+class BleuMetric(Metric):
     @staticmethod
     def evaluate(data_dict, model_name):
         USED_VARIANT = "rougeL" # rouge1, rouge2, or rougeL
@@ -22,15 +23,15 @@ class RougeMetric(Metric):
             is_figure = config.FIGURE_NAME_FORMAT in object_id
             category = "Figure" if is_figure else "Table"
 
-            response = data_dict[object_id][2]
-            reference = latex_free_dict[object_id][0]
+            response = word_tokenize(data_dict[object_id][2])
+            reference = word_tokenize(data_dict[object_id][1])
+            lf_reference = word_tokenize(latex_free_dict[object_id][0])
 
-            scorer = rouge_scorer.RougeScorer([USED_VARIANT], use_stemmer=True)
-            scores = scorer.score(reference, response)
+            score = sentence_bleu([reference, lf_reference], response)
 
             categories[category]["total"] += 1
-            categories[category]["matches"] += scores[USED_VARIANT]
+            categories[category]["matches"] += score
         categories["Overall"]["matches"] = categories["Figure"]["matches"] + categories["Table"]["matches"]
 
         # Printing results
-        RougeMetric.print_results(categories, model_name, "Rouge")
+        BleuMetric.print_results(categories, model_name, "Rouge")

@@ -23,7 +23,7 @@ class Accuracy(Metric):
         categories["Overall"]["matches"] = categories["Figure"]["matches"] + categories["Table"]["matches"]
 
         # Printing results
-        Accuracy.print_results(categories, model_name)
+        Accuracy.print_results(categories, model_name, "Accuracy")
 
     @staticmethod
     def process_model_response(response):

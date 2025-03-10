@@ -32,4 +32,4 @@ class MeteorMetric(Metric):
         categories["Overall"]["matches"] = categories["Figure"]["matches"] + categories["Table"]["matches"]
 
         # Printing results
-        MeteorMetric.print_results(categories, model_name)
+        MeteorMetric.print_results(categories, model_name, "Meteor")

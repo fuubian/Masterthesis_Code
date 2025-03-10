@@ -66,7 +66,7 @@ class LLMAccuracy(Metric):
             categories["Overall"]["matches"] = categories["Figure"]["matches"] + categories["Table"]["matches"]
 
         # Print results
-        LLMAccuracy.print_results(categories, model_name)
+        LLMAccuracy.print_results(categories, model_name, "LLM_Accuracy")
 
     @staticmethod
     def generateResponse(model, tokenizer, modified_prompt):

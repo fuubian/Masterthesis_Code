@@ -11,14 +11,16 @@ class Metric():
         pass
 
     @staticmethod
-    def print_results(categories, model_name):
+    def print_results(categories, model_name, metric_name):
         """
         This function prints the results of a given metric.
         
         Args:
             categories (dict): A dictionary of dictionaries, containing for each category (Overall, Figure, Table) the results.
+            model_name (str): The name of the evaluated model.
+            metric_name (str): The name of the used metric.
         """
-        print(f"Results for {model_name}:")
+        print(f"Results for {model_name} with {metric_name}:")
         print("=" * 30)
         for category in categories:
             match_count = categories[category]["matches"]

@@ -7,7 +7,7 @@ class BertScoreMetric(Metric):
     @staticmethod
     def evaluate(data_dict, model_name):
         categories = {
-            "Overall": {"matches": 0, "total": len(data_dict)},
+            "Overall": {"matches": 0, "total": 0},
             "Figure": {"matches": 0, "total": 0},
             "Table": {"matches": 0, "total": 0}
         }
@@ -27,10 +27,11 @@ class BertScoreMetric(Metric):
                     references.append(lf_reference)
                     hypothesises.append(response)
 
-            P, R, F1 = score(hypothesises, references, model_type="microsoft/deberta-xlarge-mnli", lang="en", verbose=True)
+            if len(references) > 0:
+                P, R, F1 = score(hypothesises, references, model_type="microsoft/deberta-xlarge-mnli", lang="en", verbose=True)
 
-            categories[category]["total"] = len(references)
-            categories[category]["matches"] = F1.mean().item()
+                categories[category]["total"] = len(references)
+                categories[category]["matches"] = F1.mean().item()
 
         # Printing results
         print(f"Results of {model_name} with BERTScore:\n")

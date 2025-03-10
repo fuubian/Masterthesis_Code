@@ -46,6 +46,8 @@ INTERNVL_MODEL_NAME_1B = "internvl_1b"
 
 # Metric list
 METEOR_METRIC = "meteor"
+BLEU_METRIC = "bleu"
+ROUGE_METRIC = "rouge"
 CIDER_METRIC = "cider"
 BERT_SCORE_METRIC = "bertscore"
 LLM_ACCURACY_METRIC = "llm_accuracy"

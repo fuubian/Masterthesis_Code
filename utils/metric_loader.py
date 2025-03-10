@@ -1,5 +1,5 @@
 import config
-from metrics import bert_score, llm_accuracy, vqa_mqm, meteor, cider
+from metrics import bert_score, llm_accuracy, vqa_mqm, meteor, cider, bleu, rouge
 
 class MetricLoader:
     @staticmethod
@@ -14,4 +14,8 @@ class MetricLoader:
             return bert_score.BertScoreMetric()
         if metric_name == config.CIDER_METRIC:
             return cider.CiderMetric()
+        if metric_name == config.BLEU_METRIC():
+            return bleu.BleuMetric()
+        if metric_name == config.ROUGE_METRIC():
+            return rouge.RougeMetric()
         raise ValueError(f"Undefined metric name received: {metric_name}. Please check the metric list to identify the correct metric name.")

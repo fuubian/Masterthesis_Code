@@ -97,7 +97,7 @@ class VQA_MQM(Metric):
             categories["Overall"]["matches"] = categories["Figure"]["matches"] + categories["Table"]["matches"]
 
         # Print results
-        VQA_MQM.print_results(categories, model_name)
+        VQA_MQM.print_results(categories, model_name, "VQA_MQM")
 
     @staticmethod
     def generateResponse(model, tokenizer, modified_prompt):
