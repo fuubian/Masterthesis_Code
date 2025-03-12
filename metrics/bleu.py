@@ -1,13 +1,13 @@
 import config
 from metrics.metric_template import Metric
 from utils.data_loader import DataLoader
-from nltk.translate.bleu_score import sentence_bleu
+from nltk.translate.bleu_score import sentence_bleu, SmoothingFunction
 from nltk.tokenize import word_tokenize
 
 class BleuMetric(Metric):
     @staticmethod
     def evaluate(data_dict, model_name):
-        USED_VARIANT = "rougeL" # rouge1, rouge2, or rougeL
+        smoother = SmoothingFunction().method1
 
         categories = {
             "Overall": {"matches": 0, "total": len(data_dict)},
@@ -27,11 +27,11 @@ class BleuMetric(Metric):
             reference = word_tokenize(data_dict[object_id][1])
             lf_reference = word_tokenize(latex_free_dict[object_id][0])
 
-            score = sentence_bleu([reference, lf_reference], response)
+            score = sentence_bleu([reference, lf_reference], response, weights=(1, 0, 0, 0), smoothing_function=smoother)
 
             categories[category]["total"] += 1
             categories[category]["matches"] += score
         categories["Overall"]["matches"] = categories["Figure"]["matches"] + categories["Table"]["matches"]
 
         # Printing results
-        BleuMetric.print_results(categories, model_name, "Rouge")
+        BleuMetric.print_results(categories, model_name, "BLEU")

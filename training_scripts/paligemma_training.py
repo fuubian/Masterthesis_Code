@@ -101,7 +101,10 @@ trainer = Trainer(
 trainer.train()
 
 # Push to HuggingFace
-trainer.push_to_hub(repo_name="fuubian/trained_paligemma")
+try:
+    trainer.push_to_hub(repo_name="fuubian/trained_paligemma")
+except Exception as e:
+    print(e)
 
 # Save locally
 model.save_pretrained("training_scripts")
