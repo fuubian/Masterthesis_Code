@@ -52,6 +52,6 @@ with open(output_csv_file, "w", encoding="utf-8", newline="") as output_csv_file
                 model_response = row[3]
 
                 if object_id in subset_set:
-                    csv_writer.writerow[model_name, object_id, question, ground_truth, model_response]
+                    csv_writer.writerow([model_name, object_id, question, ground_truth, model_response])
 
 print("csv file with all model responses of the subset was successfully created.")
