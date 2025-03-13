@@ -8,13 +8,12 @@ class VQA_MQM(Metric):
     # Error types
     error_types = {
         "Critical Value Error": "All values given in the response are significantly different.",
-        "Critical Reasoning Error": "The response presents reasoning that is fundamentally different from the reference.",
+        "Critical Factual Error": "The response presents statements that are fundamentally different from the reference.",
         "Major Completeness Error": "The response misses relevant information from the reference.",
         "Major Value Error": "One of multiple values is significantly different, affecting correctness.",
-        "Major Ambiguity Error": "The response is unclear or could be interpreted in multiple ways.",
-        "Major Reasoning Error": "The response presents reasoning that is significantly different from the reference.",
+        "Major Factual Error": "The response presents statements that partially contradict the reference.",
         "Minor Value Error": "A value in the response deviates slightly from the reference but remains within an acceptable range (less than 10% deviation).",
-        "Minor Reasoning Error": "The response presents reasoning that is slightly different from the reference.",
+        "Minor Factual Error": "The response presents statements that slightly deviate from the reference.",
         "Minor Completeness Error": "The response misses little information from the reference."
     }
 
