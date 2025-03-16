@@ -26,7 +26,9 @@ class ModelLoader:
             return ovis_model.OvisModel()
         if model_name.lower() == config.PALIGEMMA_MODEL_NAME:
             return paligemma_model.PaligemmaModel()
-        if model_name.lower() == config.PALIGEMMA_FINETUNED_MODEL_NAME:
+        if model_name.lower() == config.PALIGEMMA_MODEL_NAME_3B:
+            return paligemma_model.PaligemmaModel(model_name="google/paligemma2-3b-pt-448")
+        if model_name.lower() == config.PALIGEMMA_MODE_NAME_FINETUNED:
             return paligemma_model.PaligemmaModel(model_name="fuubian/trained_paligemma")
         if model_name.lower() == config.QWEN_MODEL_NAME:
             return qwen_model.QwenModel()
