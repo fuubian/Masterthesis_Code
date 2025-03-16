@@ -87,6 +87,7 @@ class VQA_MQM(Metric):
                 except Exception as e:
                     model_output = 0
                     print(f"Model was not able to produce a response: {e}")
+                    print(model_output)
 
                 categories[category]["matches"] += model_output
             categories["Overall"]["matches"] = categories["Figure"]["matches"] + categories["Table"]["matches"]
@@ -105,7 +106,7 @@ class VQA_MQM(Metric):
                 }
             ]
         )
-        return model_response
+        return model_response.choices[0].message.content
     
     @staticmethod
     def processOutput(output):
