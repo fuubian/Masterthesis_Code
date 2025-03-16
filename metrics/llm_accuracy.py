@@ -1,10 +1,7 @@
 import config
 import regex as re
 from metrics.metric_template import Metric
-
-from models.text_image_model import TextImageModel
-from utils.token_loader import TokenLoader
-from openai import OpenAI
+from transformers import AutoModelForCausalLM, AutoTokenizer
 
 class LLMAccuracy(Metric):
 
@@ -34,7 +31,15 @@ class LLMAccuracy(Metric):
         }
 
         # Load LLM
-        client = OpenAI(api_key=TokenLoader.load_api_key_openai())
+        model_id = "Qwen/Qwen2.5-14B-Instruct"
+        model = AutoModelForCausalLM.from_pretrained(
+            model_id,
+            torch_dtype="auto",
+            device_map="auto",
+            offload_folder="offload_folder",
+            offload_state_dict=True
+        )
+        tokenizer = AutoTokenizer.from_pretrained(model_id, trust_remote_code=True)
 
         # Iterating through all pairs
         filename = model_name + "_LLM_Acc_evaluation.txt"
@@ -50,13 +55,12 @@ class LLMAccuracy(Metric):
                 modified_prompt = LLMAccuracy.prompt.replace("{question}", question).replace("{reference}", reference).replace("{response}", response)
                 
                 try:
-                    model_output = LLMAccuracy.generateResponse(client, modified_prompt)
+                    model_output = LLMAccuracy.generateResponse(model, tokenizer, modified_prompt)
                     file_writer.write(object_id + ": " + model_output + "\n")
                     model_output = LLMAccuracy.processOutput(model_output)
                 except Exception as e:
                     model_output = 0
                     print(f"Model was not able to produce a response: {e}")
-                    print(model_output)
 
                 categories[category]["matches"] += model_output
             categories["Overall"]["matches"] = categories["Figure"]["matches"] + categories["Table"]["matches"]
@@ -65,17 +69,28 @@ class LLMAccuracy(Metric):
         LLMAccuracy.print_results(categories, model_name, "LLM_Accuracy")
 
     @staticmethod
-    def generateResponse(client, modified_prompt):
-        model_response = client.chat.completions.create(
-            model="gpt-4o",
-            messages=[
-                {
-                    "role": "user",
-                    "content": modified_prompt
-                }
-            ]
+    def generateResponse(model, tokenizer, modified_prompt):
+        messages = [
+            {"role": "system", "content": "You are Qwen, created by Alibaba Cloud. You are a helpful assistant to evaluate responses of VQA tasks."},
+            {"role": "user", "content": f"{modified_prompt}"}
+        ]
+        text = tokenizer.apply_chat_template(
+            messages,
+            tokenize=False,
+            add_generation_prompt=True
         )
-        return model_response.choices[0].message.content
+        model_inputs = tokenizer([text], return_tensors="pt").to(model.device)
+        
+        generated_ids = model.generate(
+            **model_inputs,
+            max_new_tokens=50
+        )
+        generated_ids = [
+            output_ids[len(input_ids):] for input_ids, output_ids in zip(model_inputs.input_ids, generated_ids)
+        ]
+
+        response = tokenizer.batch_decode(generated_ids, skip_special_tokens=True)[0]
+        return response
     
     @staticmethod
     def processOutput(output):
