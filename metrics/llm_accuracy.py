@@ -19,7 +19,9 @@ class LLMAccuracy(Metric):
     Reference: {reference}
     Response: {response}
     
-    Score: 
+    Please format your output the following way:
+    Score:
+    Explanation:
     """
 
     @staticmethod

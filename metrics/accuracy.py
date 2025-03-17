@@ -41,4 +41,6 @@ class Accuracy(Metric):
         regex_matches = re.findall(r"[ABCD]\)", response)
         if len(regex_matches) == 1:
             return regex_matches[0][0]
-        return response[0]
+        if len(response) != 0:
+            return response[0]
+        return "-1"
