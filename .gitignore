@@ -5,6 +5,7 @@
 *.pth
 *.csv
 *.pyc
+*.txt
 
 source_files/
 pdf_files/
@@ -16,5 +17,3 @@ data/
 TexSoup/
 
 dataset/zipping_papers.ipynb
-notebooks/qwen_LLM_Acc_evaluation.txt
-notebooks/qwenMQM_evaluation.txt
