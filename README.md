@@ -44,7 +44,9 @@ It should look like this:
 
 To run a model on the QA dataset, execute the `inference.py` script with the following arguments:
 
-```python inference.py <task_number> <model_name> <use_table_code>```
+```
+python inference.py <task_number> <model_name> <use_table_code>
+```
 
   -	`task_number`: The task number (1, 2, or 3).
   -	`model_name`: The exact model name (refer to the `config` file for available options).
@@ -58,7 +60,9 @@ The model responses will be written into an output directory.
 
 To run a model on the QA dataset, execute the `inference.py` script with the following arguments:
 
-```python evaluation.py <task_number> <model_name> <metric_name> <use_table_code>```
+```
+python evaluation.py <task_number> <model_name> <metric_name> <use_table_code>
+```
 
   -	`task_number`: The task number (1, 2, or 3).
   -	`model_name`: The exact model name (refer to the `config` file for available options).
