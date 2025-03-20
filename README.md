@@ -3,7 +3,7 @@ This repository contains all code files of my master's thesis "A Benchmark for S
 
 This benchmark tests the ability of Multimodal LLMs to reason about scientific figures and tables by applying a Visual Question-Answering (VQA) task. Therefore, the models are prompted questions, given an image and its caption. The model responses are stored in a separate csv file und later evaluated by diverse metrics. This benchmark includes traditional metrics from the field of machine translation (e.g., BLEU, ROUGE, etc.), but proposes also two new LLM-based metrics: LLM-Accuracy and VQA-MQM.
 
-The tables and figures were extracted from scientific articles, which were published on arXiv. Only papers were included, which follow a Creative Commons license. The corresponding Question-Answer (QA) pairs were generated using the [Qwen2.5](https://huggingface.co/Qwen/Qwen2.5-14B-Instruct) model. The exact notebooks and scripts, which were used to create the datasets, can be found in the folder `dataset`. Please note that the paths in those code files are not necessarily up-to-date in case you want to run them.
+The tables and figures were extracted from scientific articles, which were published on arXiv. Only papers that follow a Creative Commons license were included. The corresponding Question-Answer (QA) pairs were generated using the [Qwen2.5](https://huggingface.co/Qwen/Qwen2.5-14B-Instruct) model. The exact notebooks and scripts that were used to create the datasets can be found in the folder `dataset`. Please note that the paths in those code files are not necessarily up-to-date if you want to execute them.
 
 ## Model list
 
