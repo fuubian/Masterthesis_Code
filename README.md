@@ -1,5 +1,23 @@
 # Masterthesis_VQA
-This repository contains all code files of my master thesis "A Benchmark for Scientific Figure and Table Understanding with Multimodal LLMs"
+This repository contains all code files of my master's thesis "A Benchmark for Scientific Figure and Table Understanding with Multimodal LLMs", written at the University of Mannheim.
+
+This benchmark tests the ability of Multimodal LLMs to reason about scientific figures and tables by applying a Visual Question-Answering (VQA) task. Therefore, the models are prompted questions, given an image and its caption. The model responses are stored in a separate csv file und later evaluated by diverse metrics. This benchmark includes traditional metrics from the field of machine translation (e.g., BLEU, ROUGE, etc.), but proposes also two new LLM-based metrics: LLM-Accuracy and VQA-MQM.
+
+The tables and figures were extracted from scientific articles, which were published on arXiv. Only papers were included, which follow a Creative Commons license. The corresponding Question-Answer (QA) pairs were generated using the [Qwen2.5](https://huggingface.co/Qwen/Qwen2.5-14B-Instruct) model. The exact notebooks and scripts, which were used to create the datasets, can be found in the folder `dataset`. Please note that the paths in those code files are not necessarily up-to-date in case you want to run them.
+
+## Model list
+
+The following models are integrated into this benchmark. This list includes a shorter model name (which is required to run the inference script) and the exact version.
+
+- GLM: [glm-4v-9b](https://huggingface.co/THUDM/glm-4v-9b)
+- GPT4: [GPT-4o](https://openai.com/index/hello-gpt-4o/)
+- InstructBlip: [instructblip-flan-t5-xxl](https://huggingface.co/Salesforce/instructblip-flan-t5-xxl)
+- InternVL: [InternVL2_5-8B](https://huggingface.co/OpenGVLab/InternVL2_5-8B)
+- LLaVA: [llava-v1.6-vicuna-13b-hf](https://huggingface.co/llava-hf/llava-v1.6-vicuna-13b-hf)
+- MiniCPM: [MiniCPM-V-2_6](https://huggingface.co/openbmb/MiniCPM-V-2_6)
+- Ovis: [Ovis2-8B](https://huggingface.co/AIDC-AI/Ovis2-8B)
+- Paligemma: [paligemma2-10b-mix-448](https://huggingface.co/google/paligemma2-10b-mix-448)
+- Qwen: [Qwen2.5-VL-7B-Instruct](Qwen/Qwen2.5-VL-7B-Instruct)
 
 ## Installation
 
