@@ -29,7 +29,7 @@ class RougeMetric(Metric):
             scores = scorer.score(reference, response)
 
             categories[category]["total"] += 1
-            categories[category]["matches"] += scores[USED_VARIANT]
+            categories[category]["matches"] += scores[USED_VARIANT].fmeasure
         categories["Overall"]["matches"] = categories["Figure"]["matches"] + categories["Table"]["matches"]
 
         # Printing results
