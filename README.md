@@ -5,6 +5,12 @@ This benchmark tests the ability of Multimodal LLMs to reason about scientific f
 
 The tables and figures were extracted from scientific articles, which were published on arXiv. Only papers that follow a Creative Commons license were included. The corresponding Question-Answer (QA) pairs were generated using the [Qwen2.5](https://huggingface.co/Qwen/Qwen2.5-14B-Instruct) model. The exact notebooks and scripts that were used to create the datasets can be found in the folder `dataset`. Please note that the paths in those code files are not necessarily up-to-date if you want to execute them.
 
+Three VQA-tasks are offered by this benchmark:
+
+- **Task 1: MainVQA** - Prompting the model to answer open-ended questions about the content of scientific tables and figures.
+- **Task 2: TitleVQA** - Prompting the model to answer single-choice questions, assigning a table or figure to its origin paper (on the basis of the paper title).
+- **Task 3: RefVQA** - Prompting the model to answer single-choice questions, assigning a table or figure to a text passage, which references it. The text passage is the same that was used for the creation of QA-pairs for the MainVQA task.
+
 ## Model list
 
 The following models are integrated into this benchmark. This list includes a shorter model name (which is required to run the inference script) and the exact version.
@@ -24,15 +30,16 @@ The following models are integrated into this benchmark. This list includes a sh
 1.) **Clone this repository.**
 
 2.) **Install the requirements:** `pip install -r requirements.txt`\
-**Note:** The requirements are general. For specific models, check the Hugging Face model page to ensure the correct package versions are installed.
+**Note:** The requirements are very general. For specific models, check the Hugging Face model page to ensure the correct package versions are installed.
 
 3.) **Download the following datasets:**
   - [SciFigData](https://huggingface.co/datasets/fuubian/SciFigData)
   - [SciTabData](https://huggingface.co/datasets/fuubian/SciTabData)
-  - [VisualSciQA](https://huggingface.co/datasets/fuubian/VisualSciQA)
+  - [SciQAData](https://huggingface.co/datasets/fuubian/SciQAData)
 
 4.) **Ensure that the directory structure is correct.**
-It should look like this:
+
+The figure and table datasets contain `.tar` files that must be extracted. Afterwards, the directory structure must look like this:
 ```
 .
 └── data/
@@ -49,11 +56,15 @@ It should look like this:
 ```
 
 5.) **Set up API keys:**
+
+Some models need a key or token to be accessed. If you want to run those models, please ensure that the `.env` file is properly set.
+
   - For GPT-4:
     - Copy `env.example` to `.env`.
     - Add your OpenAI API key to the `.env` file.
   - For Paligemma:
     - Request access to the model on the Hugging Face model page.
+    - Copy `env.example` to `.env`.
     - Add your Hugging Face access token to the `.env` file.
 
     
@@ -72,7 +83,13 @@ python inference.py <task_number> <model_name> <use_table_code>
 
 The model responses will be written into an output directory.
 
+In case you want to test if a model is runnable and able to generate an answer on your system, you can execute the `test_inference.py` script:
 
+```
+python test_inference.py <model_name>
+```
+
+This script will verify that the images of the datasets are in the correct folder and prompt the selected model to describe the content of a random chosen image.
 
 ## Running evaluation
 
