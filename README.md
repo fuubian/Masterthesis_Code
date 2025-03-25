@@ -107,3 +107,7 @@ python evaluation.py <task_number> <model_name> <metric_name> <use_table_code>
   - `use_table_code` Whether the responses included table code as input (true or false). This is only applicable for Task 1.
 
 The evaluation results will be printed in the console. For metrics like **LLM-Accuracy** or **VQA-MQM**, an additional `.txt` file will be generated, storing the model responses.
+
+## Finetuning
+
+The folder `finetune_scripts` includes an example file for finetuning Paligemma on the training data. Due to resource constraints, a more extensive training was not feasible. However, the script can be enhanced for more sophisticated training. Additionally, further scripts can be added to support other models.
