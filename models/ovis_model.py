@@ -1,3 +1,5 @@
+# Following the instructions on https://huggingface.co/AIDC-AI/Ovis2-8B
+
 from models.text_image_model import TextImageModel
 import torch
 from PIL import Image

@@ -1,3 +1,5 @@
+# Following the instrctions on https://huggingface.co/llava-hf/llava-v1.6-vicuna-13b-hf
+
 from models.text_image_model import TextImageModel
 import torch
 from PIL import Image

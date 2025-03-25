@@ -100,7 +100,20 @@ Question: How does augmenting training data with GPT-3-generated examples affect
 Answer: Test set accuracy increases slightly after adding about 1,000 examples, peaking at 76%, but decreases slightly to 73% with 10,000 examples."""
 
 # Generate a qa_pair, either for a figure or a table
-def generate_qa_pair(object_id, image_file, caption, text_mentions, table_code, model, tokenizer):
+def generate_qa_pair(caption, text_mentions, table_code, model, tokenizer):
+    """
+    Generating a qa_pair, either for a figure or a table.
+
+    Args:
+        caption (str): The caption of the image within the article.
+        text_mentions (str): The text paragraphs referencing the object within the article.
+        table_code (str): The latex code of the table.
+        model (AutoModel): The model that generates the QA-pair.
+        tokenizer (AutoTokenizer): The tokenizer corresponding to the model.
+
+    Returns:
+        str: The model response, containing the QA-pair
+    """
     # Modifying the prompt
     task_input_prompt = None
     instruction_prompt = None
@@ -137,6 +150,18 @@ def generate_qa_pair(object_id, image_file, caption, text_mentions, table_code, 
     
 # Read either figure or table data from csv file
 def get_object_data(meta_file, start_index, end_index, table=False):
+    """
+    This function reads the caption, text mentions and table code for which QA-pairs shall be generated.
+
+    Args:
+        meta_file (str): The path to the metadata file, either for figures or tables.
+        start_index (int): The first index within the metadata file, for which a QA-pair shall be generated.
+        end_index (int): The last index within the metadata file, for which a QA-pair shall be generated.
+        table (bool): Whether the QA-pair generation should be executed for tables. Alternatively, it is executed for figures.
+
+    Returns:
+        dict: A dictionary, containing the caption and text_mentions for each object_id.
+    """
     object_data = {}
     with open(meta_file, "r", newline='', encoding='utf-8') as csv_file:
         spamreader = csv.reader(csv_file, delimiter=';', quotechar='|', quoting=csv.QUOTE_MINIMAL)
@@ -148,13 +173,15 @@ def get_object_data(meta_file, start_index, end_index, table=False):
                 caption = row[3]
                 text_mentions = row[4]
 
-                if table: # For tables
+                if table:
+                    # For tables
                     try:
                         table_code = get_table_code(table_code_dir + object_id + ".tex")
                         object_data[object_id] = (caption, text_mentions, table_code)
                     except Exception as e:
                         print(f"Error occurred for index {index}: {e}")
-                else: # For figures
+                else:
+                    # For figures
                     object_data[object_id] = (caption, text_mentions)
             index += 1
             if index > end_index:
@@ -162,8 +189,16 @@ def get_object_data(meta_file, start_index, end_index, table=False):
 
     return object_data
 
-# Return table code
 def get_table_code(code_file):
+    """
+    Reads the latex code of tables from a csv file, removes the preamble and returns it.
+    
+    Args:
+        code_file (str): Path to a txt file containing the latex code.
+
+    Returns:
+        str: The extracted table code.
+    """
     table_code = None
     if os.path.isfile(code_file):
         with open(code_file, "r", encoding='utf-8') as file:
@@ -181,8 +216,15 @@ def get_table_code(code_file):
         raise FileNotFoundError(f"{code_file} was not found.")
     return table_code
 
-# Execute whole QA generation for either figures or tables, following a range of indexes in the metadata file
 def execute_generation(start_index, end_index, table=False):
+    """
+    Execute the whole QA-pair generation for either figures or tables, following a range of indexes in the metadata file.
+
+    Args:
+        start_index (int): The first index within the metadata file, for which a QA-pair shall be generated.
+        end_index (int): The last index within the metadata file, for which a QA-pair shall be generated.
+        table (bool): Whether the QA-pair generation should be executed for tables. Alternatively, it is executed for figures.
+    """
     # Loading model
     model_id = "Qwen/Qwen2.5-14B-Instruct"
     model = AutoModelForCausalLM.from_pretrained(
@@ -192,6 +234,7 @@ def execute_generation(start_index, end_index, table=False):
     )
     tokenizer = AutoTokenizer.from_pretrained(model_id, trust_remote_code=True)
 
+    # Extracting data from metadata file
     print("Data extraction from csv file started.")
     object_data = None
     try:
@@ -203,22 +246,18 @@ def execute_generation(start_index, end_index, table=False):
         print("Error during data extraction:", e)
         return None
 
+    # Starting QA-pair generation
     print("QA-pair generation started.")
     counter = 0
     for obj in object_data:
-        image_file = None
         table_code = None
         caption = object_data[obj][0]
         text_mentions = object_data[obj][1]
         if table:
-            image_file = table_image_dir + obj + ".png"
             table_code = object_data[obj][2]
-        else:
-            image_file = figure_dir + obj + ".png"
             
-        # Generation
         try:    
-            response = generate_qa_pair(obj, image_file, caption, text_mentions, table_code, model, tokenizer)
+            response = generate_qa_pair(caption, text_mentions, table_code, model, tokenizer)
         except Exception as e:
             print(e)
         else:

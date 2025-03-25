@@ -1,3 +1,5 @@
+# Following the instructions on https://huggingface.co/Salesforce/instructblip-flan-t5-xxl
+
 from models.text_image_model import TextImageModel
 from transformers import InstructBlipProcessor, InstructBlipForConditionalGeneration, BitsAndBytesConfig
 import torch

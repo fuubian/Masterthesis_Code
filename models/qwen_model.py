@@ -1,3 +1,5 @@
+# Following the instructions on https://huggingface.co/Qwen/Qwen2.5-VL-7B-Instruct
+
 from models.text_image_model import TextImageModel
 import torch
 from transformers import Qwen2_5_VLForConditionalGeneration, AutoProcessor

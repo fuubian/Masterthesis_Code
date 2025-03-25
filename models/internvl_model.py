@@ -1,3 +1,5 @@
+# Following the instructions on https://huggingface.co/OpenGVLab/InternVL2_5-8B
+
 from models.text_image_model import TextImageModel
 from lmdeploy import pipeline, TurbomindEngineConfig
 from lmdeploy.vl import load_image

@@ -1,3 +1,5 @@
+# Following the instructions on https://platform.openai.com/docs/quickstart
+
 import base64
 from models.text_image_model import TextImageModel
 from utils.token_loader import TokenLoader

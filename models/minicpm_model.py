@@ -1,3 +1,4 @@
+# Following the instructions on https://huggingface.co/openbmb/MiniCPM-V-2_6
 # Note: This model does not run with transformers==4.49.0
 # Check this discussion: https://huggingface.co/openbmb/MiniCPM-V-2_6/discussions/53
 

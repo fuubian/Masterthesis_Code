@@ -5,7 +5,6 @@
 *.pth
 *.csv
 *.pyc
-*.txt
 
 source_files/
 pdf_files/

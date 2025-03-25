@@ -1,3 +1,5 @@
+# Following the instructions on https://huggingface.co/THUDM/glm-4v-9b
+
 from models.text_image_model import TextImageModel
 import torch
 from PIL import Image

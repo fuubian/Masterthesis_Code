@@ -79,9 +79,11 @@ python inference.py <task_number> <model_name> <use_table_code>
 
   -	`task_number`: The task number (1, 2, or 3).
   -	`model_name`: The exact model name (refer to the `config` file for available options).
-  -	`use_table_code` Whether to use table code as input for answering questions (true or false). This is only applicable for Task 1.
+  -	`use_table_code` Whether to include table code as input for answering questions (`true` or `false`). This is only applicable for Task 1. False by default.
 
-The model responses will be written into an output directory.
+The model responses will be written into an output directory. There must be no prior output file in the directory before execution. If there exists an incomplete output file and `use_table_code=false`, the script will only run inference for QA-pairs that are not already included.
+
+It is highly recommended to first run the script with `use_table_code=false`. If set to `true`, the script will check the output directory for already inferenced QA-pairs regarding figures. Those will be extracted and included in its own output file.
 
 In case you want to test if a model is runnable and able to generate an answer on your system, you can execute the `test_inference.py` script:
 

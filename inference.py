@@ -6,8 +6,6 @@ from utils.model_loader import ModelLoader
 from utils.data_loader import DataLoader
 from utils.prompt_loader import PromptLoader
 
-MAX_NEW_TOKENS_TASK23 = 10
-
 def run_inference(model_name, model, task_number, include_table_code, data):
     """
     This functions prompts the QA-pairs to a model and stores it responses in a separate csv file.
@@ -82,15 +80,18 @@ def main(task_number, model_name, include_table_code):
     run_inference(model_name, model, task_number, include_table_code, data)
 
 if __name__ == '__main__':
-    NUMBER_OF_ARGUMENTS = 3
     args = sys.argv[1:]
-    if len(args) != NUMBER_OF_ARGUMENTS:
-        print(f"Unexpeceted number of arguments received. Expected: {NUMBER_OF_ARGUMENTS}; Received: {len(args)}")
+    if len(args) != 2 and len(args) != 3:
+        print(f"Unexpeceted number of arguments received. Expected: 2 or 3; Received: {len(args)}")
     else:
         try:
             task_number = int(args[0])
             model_name = args[1]
-            include_table_code = args[2].lower() == "true"
+
+            if task_number == 1 and len(args) == 3:
+                include_table_code = args[2].lower() == "true"
+            else:
+                include_table_code = False
         except ValueError as e:
             print(f"Error occurred while processing arguments: {e}")
         else:

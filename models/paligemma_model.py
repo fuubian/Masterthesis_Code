@@ -1,3 +1,5 @@
+# Following the instructions on https://huggingface.co/google/paligemma2-10b-mix-448
+
 from models.text_image_model import TextImageModel
 from utils.token_loader import TokenLoader
 from huggingface_hub import login
