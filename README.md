@@ -25,6 +25,20 @@ The following models are integrated into this benchmark. This list includes a sh
 - Paligemma: [paligemma2-10b-mix-448](https://huggingface.co/google/paligemma2-10b-mix-448)
 - Qwen: [Qwen2.5-VL-7B-Instruct](Qwen/Qwen2.5-VL-7B-Instruct)
 
+## Metric list
+
+The following metrics for MainVQA are integrated into this benchmark. This list includes the exact name that is required to run the evaluation script:
+
+- BERTScore
+- BLEU
+- CIDEr
+- LLM_Accuracy
+- Meteor
+- ROUGE (ROUGE-L)
+- VQA_MQM
+
+The tasks TitleVQA and RefVQA use standard accuracy. Therefore, they don't require (and accept) the specification of a metric.
+
 ## Installation
 
 1.) **Clone this repository.**
@@ -79,9 +93,15 @@ python inference.py <task_number> <model_name> <use_table_code>
 
   -	`task_number`: The task number (1, 2, or 3).
   -	`model_name`: The exact model name (refer to the `config` file for available options).
-  -	`use_table_code` Whether to include table code as input for answering questions (`true` or `false`). This is only applicable for Task 1. False by default.
+  -	`use_table_code`: Whether to include table code as input for answering questions (`true` or `false`). This is only applicable for Task 1. False by default.
 
-The model responses will be written into an output directory. There must be no prior output file in the directory before execution. If there exists an incomplete output file and `use_table_code=false`, the script will only run inference for QA-pairs that are not already included.
+The model responses will be written into an output directory. There must be no prior output file in the directory before execution. If there exists an incomplete output file and `use_table_code=false`, the script will only run inference for QA-pairs that are not already included. 
+
+For instance, if you want to run the Qwen model on MainVQA without including table code, you need to run the following line:
+
+```
+python inference.py 1 qwen false
+```
 
 It is highly recommended to first run the script with `use_table_code=false`. If set to `true`, the script will check the output directory for already inferenced QA-pairs regarding figures. Those will be extracted and included in its own output file.
 
@@ -91,7 +111,7 @@ In case you want to test if a model is runnable and able to generate an answer o
 python test_inference.py <model_name>
 ```
 
-This script will verify that the images of the datasets are in the correct folder and prompt the selected model to describe the content of a random chosen image.
+This script will verify that the images of the datasets are in the correct folder and prompt the selected model to describe the content of a randomly chosen image.
 
 ## Running evaluation
 
@@ -103,10 +123,16 @@ python evaluation.py <task_number> <model_name> <metric_name> <use_table_code>
 
   -	`task_number`: The task number (1, 2, or 3).
   -	`model_name`: The exact model name (refer to the `config` file for available options).
-  -	`metric_name` The evaluation metric (refer to the `config` file for available options).
-  - `use_table_code` Whether the responses included table code as input (true or false). This is only applicable for Task 1.
+  -	`metric_name`: The evaluation metric (refer to the `config` file for available options).
+  - `use_table_code`: Whether the responses included table code as input (true or false). This is only applicable for Task 1.
 
-The evaluation results will be printed in the console. For metrics like **LLM-Accuracy** or **VQA-MQM**, an additional `.txt` file will be generated, storing the model responses.
+The evaluation results will be printed in the console. For metrics like **LLM-Accuracy** or **VQA-MQM**, an additional `.txt` file will be generated, storing the model responses. If `use_table_code` is set to `true`, the script will only evaluate the responses of QA-pairs regarding tables with code. Responses regarding figures will not be included.
+
+For instance, if you want to evaluate all responses of the Qwen model on MainVQA with LLM-Accuracy, you need to run the following line:
+
+```
+python evaluation.py 1 qwen LLM-Accuracy false
+```
 
 ## Finetuning
 
