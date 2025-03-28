@@ -10,8 +10,8 @@ class DataLoader:
         """
         This method checks if the dataset files, which are set in the config file, exist. Otherwise, a ValueError is raised.
         """        
-        important_paths = [config.DATASET_PATH, config.FIGURE_FILES_PATH, config.FIGURE_METADATA_PATH, config.QA_TEST_SPLIT_PATH, config.QA_TRAIN_SPLIT_PATH,
-                        config.TABLE_CODE_PATH, config.TABLE_IMAGE_PATH, config.TABLE_METADATA_PATH, config.QA_TEST_TASK2_PATH, config.QA_TEST_TASK3_PATH]
+        important_paths = [config.DATASET_PATH, config.FIGURE_FILES_PATH, config.FIGURE_METADATA_PATH, config.QA_TEST_SPLIT_PATH, config.TABLE_CODE_PATH, 
+                           config.QA_TEST_SPLIT_LATEX_CLEAN_PATH, config.TABLE_IMAGE_PATH, config.TABLE_METADATA_PATH, config.QA_TEST_TASK2_PATH, config.QA_TEST_TASK3_PATH]
         for path in important_paths:
             if not os.path.exists(path):
                 raise ValueError(f"{path} could not be found. Please check the config file.")
