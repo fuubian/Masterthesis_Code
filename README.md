@@ -46,10 +46,16 @@ The tasks TitleVQA and RefVQA use standard accuracy. Therefore, they don't requi
 2.) **Install the requirements:** `pip install -r requirements.txt`\
 **Note:** The requirements are very general. For specific models, check the Hugging Face model page to ensure the correct package versions are installed.
 
-3.) **Download the following datasets:**
+3.) **Download the datasets:**
+
+In case you intend to use the test and train split of MainVQA, you need to download the following datasets (>20 GB):
   - [SciFigData](https://huggingface.co/datasets/fuubian/SciFigData)
   - [SciTabData](https://huggingface.co/datasets/fuubian/SciTabData)
   - [SciQAData](https://huggingface.co/datasets/fuubian/SciQAData)
+
+If you only want to run inference without using the train split, it is sufficient to download the following datasets (<2 GB):
+  - [SciQAData](https://huggingface.co/datasets/fuubian/SciQAData)
+  - [SciFigTabData](https://huggingface.co/datasets/fuubian/SciFigTabSubset)
 
 4.) **Ensure that the directory structure is correct.**
 
