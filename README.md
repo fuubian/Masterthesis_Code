@@ -1,5 +1,5 @@
-# Masterthesis_VQA
-This repository contains all code files of my master's thesis "A Benchmark for Scientific Figure and Table Understanding with Multimodal LLMs", written at the University of Mannheim.
+# Master's Thesis: VQA Benchmark
+This repository contains all code files of my master's thesis **A Benchmark for Scientific Figure and Table Understanding with Multimodal LLMs**, written at the University of Mannheim.
 
 This benchmark tests the ability of Multimodal LLMs to reason about scientific figures and tables by applying a Visual Question-Answering (VQA) task. Therefore, the models are prompted questions, given an image and its caption. The model responses are stored in a separate csv file und later evaluated by diverse metrics. This benchmark includes traditional metrics from the field of machine translation (e.g., BLEU, ROUGE, etc.), but proposes also two new LLM-based metrics: LLM-Accuracy and VQA-MQM.
 
@@ -13,7 +13,7 @@ Three VQA-tasks are offered by this benchmark:
 
 ## Model list
 
-The following models are integrated into this benchmark. This list includes a shorter model name (which is required to run the inference script) and the exact version.
+The following models are integrated into this benchmark. This list includes a shorter model name (which is required to run the inference script) and the exact version. Generally, the exact model names to run the scripts can be seen and changed in the `config.py` file.
 
 - GLM: [glm-4v-9b](https://huggingface.co/THUDM/glm-4v-9b)
 - GPT4: [GPT-4o](https://openai.com/index/hello-gpt-4o/)
@@ -27,7 +27,7 @@ The following models are integrated into this benchmark. This list includes a sh
 
 ## Metric list
 
-The following metrics for MainVQA are integrated into this benchmark. This list includes the exact name that is required to run the evaluation script:
+The following metrics for MainVQA are integrated into this benchmark. This list includes the exact name that is required to run the evaluation script. Generally, the exact metric names to run the scripts can be seen and changed in the `config.py` file.
 
 - BERTScore
 - BLEU
@@ -134,6 +134,6 @@ For instance, if you want to evaluate all responses of the Qwen model on MainVQA
 python evaluation.py 1 qwen LLM-Accuracy false
 ```
 
-## Finetuning
+## Fine-tuning
 
-The folder `finetune_scripts` includes an example file for finetuning Paligemma on the training data. Due to resource constraints, a more extensive training was not feasible. However, the script can be enhanced for more sophisticated training. Additionally, further scripts can be added to support other models.
+The folder `finetune_scripts` includes an example file for fine-tuning Paligemma on the training data. Due to resource constraints, a more extensive training was not feasible. However, the script can be enhanced to improve the training stage if desired. Additionally, further scripts can be added to support other models.
