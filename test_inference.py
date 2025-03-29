@@ -37,7 +37,7 @@ if __name__ == '__main__':
         print(f"Unexpeceted number of arguments received. Expected: {NUMBER_OF_ARGUMENTS}; Received: {len(args)}")
     else:
         try:
-            model_name = args[0]
+            model_name = args[0].lower()
         except ValueError as e:
             print(f"Error occurred while processing arguments: {e}")
         else:

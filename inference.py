@@ -86,7 +86,7 @@ if __name__ == '__main__':
     else:
         try:
             task_number = int(args[0])
-            model_name = args[1]
+            model_name = args[1].lower()
 
             if task_number == 1 and len(args) == 3:
                 include_table_code = args[2].lower() == "true"

@@ -37,7 +37,7 @@ if __name__ == '__main__':
     else:
         try:
             task_number = int(args[0])
-            model_name = args[1]
+            model_name = args[1].lower()
             metric_name = None
             evaluate_table_code = False
 
@@ -45,7 +45,7 @@ if __name__ == '__main__':
                 if len(args) != 4:
                     print(f"Unexpeceted number of arguments received. Expected: 4; Received: {len(args)}")
                     sys.exit()
-                metric_name = args[2]
+                metric_name = args[2].lower()
                 evaluate_table_code = args[3].lower() == "true"
         except ValueError as e:
             print(f"Error occurred while processing arguments: {e}")
