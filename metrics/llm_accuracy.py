@@ -19,8 +19,8 @@ class LLMAccuracy(Metric):
     Reference: {reference}
     Response: {response}
     
-    Score:
-    """
+    Please format your output the following way:
+    Score:"""
 
     @staticmethod
     def evaluate(data_dict, model_name):
