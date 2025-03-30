@@ -132,7 +132,7 @@ python evaluation.py <task_number> <model_name> <metric_name> <use_table_code>
   -	`metric_name`: The evaluation metric (refer to the `config` file for available options).
   - `use_table_code`: Whether the responses included table code as input (true or false). This is only applicable for Task 1.
 
-The evaluation results will be printed in the console. For metrics like **LLM-Accuracy** or **VQA-MQM**, an additional `.txt` file will be generated, storing the model responses. If `use_table_code` is set to `true`, the script will only evaluate the responses of QA-pairs regarding tables with code. Responses regarding figures will not be included.
+The evaluation results will be printed in the console. It is necessary that the output file that containins the responses of the corresponding model exists within the output directory. For metrics like **LLM-Accuracy** or **VQA-MQM**, an additional `.txt` file will be generated, storing the model responses. If `use_table_code` is set to `true`, the script will only evaluate the responses of QA-pairs regarding tables with code. Responses regarding figures will not be included.
 
 For instance, if you want to evaluate all responses of the Qwen model on MainVQA with LLM-Accuracy, you need to run the following line:
 
