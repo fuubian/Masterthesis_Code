@@ -143,3 +143,8 @@ python evaluation.py 1 qwen LLM-Accuracy false
 ## Fine-tuning
 
 The folder `finetune_scripts` includes an example file for fine-tuning Paligemma on the training data. Due to resource constraints, a more extensive training was not feasible. However, the script can be enhanced to improve the training stage if desired. Additionally, further scripts can be added to support other models.
+
+## Experimental Data
+
+Further experimental data, such as human-annotated data and generated model responses for each task, can be accessed through the following link: 
+https://drive.google.com/drive/folders/17oV9ipYVbSv9PbjLQTnhELWuNLZJ4jCT?usp=sharing
